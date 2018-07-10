@@ -12,4 +12,11 @@ public class RolesService {
 		return "<h1>Anda el servicio maven</h1>";
 	}
 
+	
+	@GET
+	@Path("/mensajeHola")
+	public String sayHello1() {
+		return "<h1>Anda el servicio maven, y sigue andando</h1>";
+	}
+	
 }
