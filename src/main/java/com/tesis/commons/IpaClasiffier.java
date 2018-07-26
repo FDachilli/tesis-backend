@@ -6,7 +6,6 @@ import org.processDataset.DirectProcessing;
 import org.processDataset.PhasesProcessingSingleClassifier;
 import org.processDataset.ProcessDataset;
 import org.weka.*;
-
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 
@@ -16,7 +15,7 @@ public class IpaClasiffier {
 
         Weka weka = new WekaSMO(10, 1, 3);
         ProcessDataset process = new DirectProcessing(weka, true, true);
-        return process.classify(file, "");
+        return process.classify(file, "", "C:\\Users\\franc\\Dropbox\\tesis-backend\\");
 
     }
 

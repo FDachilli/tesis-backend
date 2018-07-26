@@ -1,0 +1,25 @@
+@relation chat
+
+@attribute Conducta {1,2,3,4,5,6,7,8,9,10,11,12}
+@attribute nombre string
+@attribute message string
+
+@data
+?,Juan,'Hola chicos, para los que no pudieron ir a la última teoría de la materia, les envié un link sobre un apunte de Aprendizaje de maquinas para que puedan tener una idea de lo que se está preguntando.'
+?,Pedro,'Los sistemas que aprenden son sistemas capaces de optimizar un criterio de desempeño usando datos de ejemplo o experiencia pasada.'
+?,Juan,'Se dice que un programa aprende de una experiencia E con respecto a una clase de tareas T y medida de desempeño P, si su desempeño en las tareas en T, de acuerdo con la medida P, mejora con la experiencia E.'
+?,María,'Una forma sencilla de explicar la principal ventaja del aprendizaje de máquinas:'
+?,María,'“Encontrar un error en un programa, y arreglarlo, hará que el programa funcione correctamente hoy.'
+?,Pedro,'Hacer que el programa encuentre el problema y lo arregle, hará que el programa funcione bien siempre”'
+?,Juan,'Esto último lo encontre en una página, capaz que esta bueno para entenderlo.'
+?,Juan,'Perfecto, está muy buena la info, coincidimos en que se basa en experiencias pasadas para mejorar el desempeño de las tareas futuras.'
+?,María,'Si quieren ya podemos ir armando una respuesta en base a lo que averiguamos.'
+?,Ramiro,'Que opinan?'
+?,Roberto,'Dale dale, joya.'
+?,Ramiro,'Entre lo que tenemos vamos haciendo un rejunte y poniendo también con nuestras palabras lo que entendimos.'
+?,Juan,'Cuando armemos una respuesta vemos si le falta algo, y si estamos todos de acuerdo.'
+?,Pedro,'bárbaro'
+?,Juan,'si les parece empiezo a escribir la respuesta y a medida que los otros chicos vayan viendo, agregamos / modificamos cosas.'
+?,Pedro,'Dale, por mi no hay problema.'
+?,María,'Fijate que en la info que pusiste vos en tu comentario, pusiste tambien un par de ejemplos, que pueden llegar a servir para la pregunta 2.'
+?,Roberto,gracias
