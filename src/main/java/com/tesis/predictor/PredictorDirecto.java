@@ -41,9 +41,9 @@ public class PredictorDirecto extends Predictor{
         }*/
 
 
-           Instances prediccionDirecta = predecir("./ResumenDirecto.arff",
+           Instances prediccionDirecta = predecir(filePath,
                    Constants.PREDICTIONS_DIRECTO_FOLDER + String.valueOf(System.currentTimeMillis()) + "-" + model+ Constants.ARFF_FILE,
-                   "2-4, 6-17, 27-47,66-68", Constants.MODELS_DIRECTO_FOLDER + model + Constants.DAT_FILE,
+                   "2-4, 6-6", Constants.MODELS_DIRECTO_FOLDER + model + Constants.DAT_FILE,
                    "2");
            System.out.println(prediccionDirecta.toString());
 
@@ -57,7 +57,7 @@ public class PredictorDirecto extends Predictor{
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(WekaRoles.classRolAttribute());
         attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
-        //attributes.addAll(WekaRoles.getRolesCompanerosAttributes());
+        attributes.add(WekaRoles.classRolCompanerosAttribute());
 
         for (int i=1; i<=12; i++){
             attributes.add(new Attribute("C"+i));
@@ -74,6 +74,8 @@ public class PredictorDirecto extends Predictor{
         for (int i = 1; i<=3; i++){
             attributes.add(new Attribute("Horario"+i));
         }
+        
+        attributes.addAll(WekaRoles.getSymlogAttributes());
 
         attributes.add(new Attribute("cant_mensajes"));
 
@@ -86,7 +88,8 @@ public class PredictorDirecto extends Predictor{
             String rol = "?";
 
             String nombre = instance.stringValue(instanceIndex++);
-            Double finalizador_companeros = instance.value(instanceIndex++);
+            String rol_companeros = instance.stringValue(instanceIndex++);
+            /*Double finalizador_companeros = instance.value(instanceIndex++);
             Double impulsor_companeros = instance.value(instanceIndex++);
             Double cerebro_companeros = instance.value(instanceIndex++);
             Double colaborador_companeros = instance.value(instanceIndex++);
@@ -94,7 +97,7 @@ public class PredictorDirecto extends Predictor{
             Double implementador_companeros = instance.value(instanceIndex++);
             Double monitor_companeros = instance.value(instanceIndex++);
             Double investigador_companeros = instance.value(instanceIndex++);
-            Double coordinador_companeros = instance.value(instanceIndex++);
+            Double coordinador_companeros = instance.value(instanceIndex++);*/
 
             Double C1 = instance.value(instanceIndex++);
             Double C2 = instance.value(instanceIndex++);
@@ -121,6 +124,13 @@ public class PredictorDirecto extends Predictor{
             Double horario2 = instance.value(instanceIndex++);
             Double horario3 = instance.value(instanceIndex++);
 
+            Double dominante = instance.value(instanceIndex++);
+            Double sumiso = instance.value(instanceIndex++);
+            Double amistoso = instance.value(instanceIndex++);
+            Double no_amistoso = instance.value(instanceIndex++);
+            Double tarea_symlog = instance.value(instanceIndex++);
+            Double socio_emocional_symlog = instance.value(instanceIndex++);
+            
             Double cant_mensajes = instance.value(instanceIndex);
 
 
@@ -129,7 +139,8 @@ public class PredictorDirecto extends Predictor{
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(rol);
 
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);
-            values[valuesIndex++] = finalizador_companeros;
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(rol_companeros);
+            /*values[valuesIndex++] = finalizador_companeros;
             values[valuesIndex++] = impulsor_companeros;
             values[valuesIndex++] = cerebro_companeros;
             values[valuesIndex++] = colaborador_companeros;
@@ -137,7 +148,7 @@ public class PredictorDirecto extends Predictor{
             values[valuesIndex++] = implementador_companeros;
             values[valuesIndex++] = monitor_companeros;
             values[valuesIndex++] = investigador_companeros;
-            values[valuesIndex++] = coordinador_companeros;
+            values[valuesIndex++] = coordinador_companeros;*/
 
             values[valuesIndex++] = C1;
             values[valuesIndex++] = C2;
@@ -162,6 +173,12 @@ public class PredictorDirecto extends Predictor{
             values[valuesIndex++] = horario1;
             values[valuesIndex++] = horario2;
             values[valuesIndex++] = horario3;
+            values[valuesIndex++] = dominante;
+            values[valuesIndex++] = sumiso;
+            values[valuesIndex++] = amistoso;
+            values[valuesIndex++] = no_amistoso;
+            values[valuesIndex++] = tarea_symlog;
+            values[valuesIndex++] = socio_emocional_symlog;
             values[valuesIndex]= cant_mensajes;
 
             Instance newInstance = new DenseInstance(1.0, values);

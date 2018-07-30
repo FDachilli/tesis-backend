@@ -73,6 +73,18 @@ public class WekaRoles {
         Attribute attClassRol = new Attribute("class_rol_companeros", labels);
         return attClassRol;
     }
+    
+    public static ArrayList<Attribute> getSymlogAttributes() {
+
+        ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+        attributes.add(new Attribute("dominante_symlog"));
+        attributes.add(new Attribute("sumiso_symlog"));
+        attributes.add(new Attribute("amistoso_symlog"));
+        attributes.add(new Attribute("no_amistoso_symlog"));
+        attributes.add(new Attribute("tarea_symlog"));
+        attributes.add(new Attribute("socio_emocional_symlog"));
+        return attributes;
+    }
 
     public static Attribute classTipoRolAttribute() {
         ArrayList<String> labels = new ArrayList();

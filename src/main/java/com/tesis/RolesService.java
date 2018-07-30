@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import org.json.JSONException;
 
 import com.tesis.commons.IpaClasiffier;
+import com.tesis.predictor.PredictorDirecto;
 
 @Path("roles")
 public class RolesService {
@@ -31,6 +32,21 @@ public class RolesService {
 	@Path("/mensajeHola")
 	public String sayHello1() {
 		return "<h1>Anda el servicio maven, y sigue andando</h1>";
+	}
+	
+	@GET
+	@Path("/predecirDirecto")
+	public String predecirDirecto() throws Exception {
+		//TODO tener un path temporal con el archivo y despues borrarlo (cuando mandan una sola conversacion, sino recibis el archivo completo)
+		
+		String[] namesClasificadores = {"J48"};
+		String prediccion="";
+        PredictorDirecto predictorDirecto = new PredictorDirecto();
+        for (int j = 0; j < namesClasificadores.length; j++) {
+            predictorDirecto.predecirDirecto("C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenDirecto.arff", namesClasificadores[j]);
+        }
+		
+		return "Predicio directo";
 	}
 	
 }

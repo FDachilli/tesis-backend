@@ -12,13 +12,13 @@ public abstract class Predictor {
     private WekaRoles wekaRoles = new WekaRoles();
 
     public Instances predecir(String unlabeledFilePath, String labeledFilePath, String attributesToRemove, String pathModel, String posNombre) throws Exception {
-
+    	//TODO una carpeta modelos y despues que se divida en directos y en fases.
         Instances unlabeled = Weka.loadDataset(unlabeledFilePath);
 
         unlabeled = prepareArff(unlabeled, attributesToRemove);
 
         //Classifier cls = wekaRoles.loadModel("results\\procesamientoDirecto\\modelos\\" + namesClasificadores[j] + "-directo.dat");
-        Classifier cls = wekaRoles.loadModel(pathModel);
+        Classifier cls = wekaRoles.loadModel("C:\\Users\\franc\\Dropbox\\tesis-backend\\" + pathModel);
         // set class attribute
         unlabeled.setClassIndex(0);
 

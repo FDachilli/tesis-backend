@@ -18,7 +18,7 @@ public class Constants {
     public static final String RESULTS_FOLDER =  "resultados" + File.separator;
     public static final String PREDICTIONS_FOLDER =  "predicciones" + File.separator;
     public static final String DIRECTO_LABELED_FOLDER = "results" + File.separator + "labeled" + File.separator + "Directo" + File.separator;
-    public static final String MODELS_DIRECTO_FOLDER = "results" + File.separator + "procesamientoDirecto" + File.separator + MODELS_FOLDER;
+    public static final String MODELS_DIRECTO_FOLDER = "procesamientoDirecto" + File.separator + MODELS_FOLDER;
     public static final String MODELS_DIRECTO_FILTROS_FOLDER = "results" + File.separator + "resample_discretize" + File.separator + "procesamientoDirecto" + File.separator + MODELS_FOLDER;
     public static final String RESULTS_DIRECTO_FOLDER = "results" + File.separator + "procesamientoDirecto" + File.separator + RESULTS_FOLDER;
     public static final String RESULTS_DIRECTO_FILTROS_FOLDER = "results" + File.separator  + "resample_discretize" + File.separator + "procesamientoDirecto" + File.separator + RESULTS_FOLDER;
