@@ -3,29 +3,31 @@ package com.tesis.predictor;
 import org.weka.Weka;
 import com.tesis.weka.WekaRoles;
 import weka.classifiers.Classifier;
+import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
 
-public abstract class Predictor {
+public abstract class Predictor extends PredictorAbstracto{
 
-    private WekaRoles wekaRoles = new WekaRoles();
+	protected String pathGrupo;
+	protected String model;
 
-    public Instances predecir(String unlabeledFilePath, String labeledFilePath, String attributesToRemove, String pathModel, String posNombre) throws Exception {
+    public Instances predecir(String unlabeledFilePath, String labeledFilePath, String attributesToRemove, String pathModel) throws Exception {
     	//TODO una carpeta modelos y despues que se divida en directos y en fases.
         Instances unlabeled = Weka.loadDataset(unlabeledFilePath);
 
         unlabeled = prepareArff(unlabeled, attributesToRemove);
 
         //Classifier cls = wekaRoles.loadModel("results\\procesamientoDirecto\\modelos\\" + namesClasificadores[j] + "-directo.dat");
-        Classifier cls = wekaRoles.loadModel("C:\\Users\\franc\\Dropbox\\tesis-backend\\" + pathModel);
+        Classifier cls = wekaRoles.loadModel(pathModel);
         // set class attribute
         unlabeled.setClassIndex(0);
 
         // create copy
         Instances labeled = new Instances(unlabeled);
 
-        unlabeled = WekaRoles.removeAttributes(unlabeled, posNombre);
+        unlabeled = WekaRoles.removeAttributes(unlabeled, "2");
 
         // label instances
         for (int i = 0; i < unlabeled.numInstances(); i++) {
@@ -38,7 +40,11 @@ public abstract class Predictor {
         return labeled;
 
     }
+    
 
-    public abstract Instances prepareArff(Instances arff, String attributesToRemove) throws Exception;
+	@Override
+	public abstract Instances prepareArff(Instances arff, String attributesToRemove) throws Exception;
+
+   
 
 }

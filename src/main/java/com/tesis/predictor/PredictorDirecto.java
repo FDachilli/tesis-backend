@@ -5,7 +5,10 @@ import org.apache.commons.io.FileUtils;
 import org.weka.Weka;
 import com.tesis.organizador.Organizador;
 import com.tesis.parser.DirectoParser;
+import com.tesis.predictor.grupo.PredictorDirectoGrupo;
 import com.tesis.weka.WekaRoles;
+
+import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -16,8 +19,7 @@ import java.util.ArrayList;
 
 public class PredictorDirecto extends Predictor{
 
-
-    public void predecirDirecto (String filePath, String model) throws Exception {
+    public void predecirDirecto (String filePath, String modelPred) throws Exception {
 
         if (filePath.contains(Constants.JSON_FILE)) {
             //Limpio directorio para despues no procesar archivos viejos
@@ -39,12 +41,12 @@ public class PredictorDirecto extends Predictor{
 
             }
         }*/
-
-
+        	model = modelPred;
+        	pathGrupo = "C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenGrupoDirecto.arff";
+        	//TODO sacar el path de grupos del organizador
            Instances prediccionDirecta = predecir(filePath,
                    Constants.PREDICTIONS_DIRECTO_FOLDER + String.valueOf(System.currentTimeMillis()) + "-" + model+ Constants.ARFF_FILE,
-                   "2-4, 6-6", Constants.MODELS_DIRECTO_FOLDER + model + Constants.DAT_FILE,
-                   "2");
+                   "2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE);
            System.out.println(prediccionDirecta.toString());
 
     }
@@ -57,7 +59,8 @@ public class PredictorDirecto extends Predictor{
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(WekaRoles.classRolAttribute());
         attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
-        attributes.add(WekaRoles.classRolCompanerosAttribute());
+        Attribute attRolCompaneros = WekaRoles.classRolCompanerosAttribute();
+        attributes.add(attRolCompaneros);
 
         for (int i=1; i<=12; i++){
             attributes.add(new Attribute("C"+i));
@@ -88,17 +91,8 @@ public class PredictorDirecto extends Predictor{
             String rol = "?";
 
             String nombre = instance.stringValue(instanceIndex++);
-            String rol_companeros = instance.stringValue(instanceIndex++);
-            /*Double finalizador_companeros = instance.value(instanceIndex++);
-            Double impulsor_companeros = instance.value(instanceIndex++);
-            Double cerebro_companeros = instance.value(instanceIndex++);
-            Double colaborador_companeros = instance.value(instanceIndex++);
-            Double especialista_companeros = instance.value(instanceIndex++);
-            Double implementador_companeros = instance.value(instanceIndex++);
-            Double monitor_companeros = instance.value(instanceIndex++);
-            Double investigador_companeros = instance.value(instanceIndex++);
-            Double coordinador_companeros = instance.value(instanceIndex++);*/
-
+            String rol_companeros = "?";
+            instanceIndex++;
             Double C1 = instance.value(instanceIndex++);
             Double C2 = instance.value(instanceIndex++);
             Double C3 = instance.value(instanceIndex++);
@@ -140,15 +134,6 @@ public class PredictorDirecto extends Predictor{
 
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(rol_companeros);
-            /*values[valuesIndex++] = finalizador_companeros;
-            values[valuesIndex++] = impulsor_companeros;
-            values[valuesIndex++] = cerebro_companeros;
-            values[valuesIndex++] = colaborador_companeros;
-            values[valuesIndex++] = especialista_companeros;
-            values[valuesIndex++] = implementador_companeros;
-            values[valuesIndex++] = monitor_companeros;
-            values[valuesIndex++] = investigador_companeros;
-            values[valuesIndex++] = coordinador_companeros;*/
 
             values[valuesIndex++] = C1;
             values[valuesIndex++] = C2;
@@ -184,12 +169,20 @@ public class PredictorDirecto extends Predictor{
             Instance newInstance = new DenseInstance(1.0, values);
             if (values[0] == -1.0)
                 newInstance.setMissing(sentencesDataset.attribute(0));
+            
+            if (values[2] == -1.0)
+                newInstance.setMissing(sentencesDataset.attribute(2));
 
             sentencesDataset.add(newInstance);
 
         }
+        
+        PredictorDirectoGrupo predictorDirectoGrupo = new PredictorDirectoGrupo();
 
-        return sentencesDataset;
+        return predictorDirectoGrupo.predecir(pathGrupo, "2-4, 6-6",
+        		"C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE, attRolCompaneros, sentencesDataset);
     }
 
+
+	
 }

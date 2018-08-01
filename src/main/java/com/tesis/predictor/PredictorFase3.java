@@ -3,6 +3,8 @@ package com.tesis.predictor;
 import com.tesis.commons.Constants;
 import org.weka.Weka;
 import com.tesis.weka.WekaRoles;
+
+import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -19,7 +21,7 @@ public class PredictorFase3 extends Predictor{
         results.setPath(resultPath);
         results.setLabeledInstances(predecir(filePath,
                 resultPath
-                ,"", Constants.FASES_FOLDER + Constants.FASE_TRES_FOLDER + Constants.MODELS_FOLDER + clasificador + Constants.DAT_FILE, "3").toString());
+                ,"", Constants.FASES_FOLDER + Constants.FASE_TRES_FOLDER + Constants.MODELS_FOLDER + clasificador + Constants.DAT_FILE).toString());
         return results;
     }
 

@@ -1,8 +1,12 @@
 package com.tesis.predictor;
 
 import com.tesis.commons.Constants;
+import com.tesis.predictor.grupo.PredictorFase2Grupo;
+
 import org.weka.Weka;
 import com.tesis.weka.WekaRoles;
+
+import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -13,14 +17,16 @@ import java.util.ArrayList;
 public class PredictorFase2 extends Predictor{
 
 
-    public FaseResultados predecirFase2 (String filePath, String clasificador) throws Exception {
+    public FaseResultados predecirFase2 (String filePath, String modelPred) throws Exception {
 
+    		model = modelPred;
+    		pathGrupo = "C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenGrupoFase2.arff";
             FaseResultados results = new FaseResultados();
-            String resultPath = Constants.FASES_FOLDER + Constants.FASE_DOS_FOLDER + Constants.PREDICTIONS_FOLDER +  String.valueOf(System.currentTimeMillis()) + "-" + clasificador + Constants.ARFF_FILE;
+            String resultPath = Constants.FASES_FOLDER + Constants.FASE_DOS_FOLDER + Constants.PREDICTIONS_FOLDER +  String.valueOf(System.currentTimeMillis()) + "-" + model + Constants.ARFF_FILE;
             results.setPath(resultPath);
             results.setLabeledInstances(predecir(filePath,
                     resultPath
-                    ,"2-4, 6-17, 27-47,66-68", Constants.FASES_FOLDER + Constants.FASE_DOS_FOLDER + Constants.MODELS_FOLDER + clasificador + Constants.DAT_FILE, "2").toString());
+                    ,"2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2\\" + model + Constants.DAT_FILE).toString());
             return results;
     }
 
@@ -32,8 +38,10 @@ public class PredictorFase2 extends Predictor{
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(WekaRoles.classTipoRolAttribute());
         attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
-        //attributes.addAll(WekaRoles.getRolesCompanerosAttributes());
+        Attribute att_tipo_comp = WekaRoles.classTipoRolCompanerosAttribute();
+        attributes.add(att_tipo_comp);
 
+        //TODO obtenerlos de Weka roles 
         for (int i=1; i<=12; i++){
             attributes.add(new Attribute("C"+i));
         }
@@ -49,6 +57,8 @@ public class PredictorFase2 extends Predictor{
         for (int i = 1; i<=3; i++){
             attributes.add(new Attribute("Horario"+i));
         }
+        
+        attributes.addAll(WekaRoles.getSymlogAttributes());
 
         attributes.add(new Attribute("cant_mensajes"));
 
@@ -61,16 +71,8 @@ public class PredictorFase2 extends Predictor{
             String tipo_rol = "?";
 
             String nombre = instance.stringValue(instanceIndex++);
-            Double finalizador_companeros = instance.value(instanceIndex++);
-            Double impulsor_companeros = instance.value(instanceIndex++);
-            Double cerebro_companeros = instance.value(instanceIndex++);
-            Double colaborador_companeros = instance.value(instanceIndex++);
-            Double especialista_companeros = instance.value(instanceIndex++);
-            Double implementador_companeros = instance.value(instanceIndex++);
-            Double monitor_companeros = instance.value(instanceIndex++);
-            Double investigador_companeros = instance.value(instanceIndex++);
-            Double coordinador_companeros = instance.value(instanceIndex++);
-
+            String tipo_rol_comp = "?";
+            instanceIndex++;
             Double C1 = instance.value(instanceIndex++);
             Double C2 = instance.value(instanceIndex++);
             Double C3 = instance.value(instanceIndex++);
@@ -95,6 +97,13 @@ public class PredictorFase2 extends Predictor{
             Double horario1 = instance.value(instanceIndex++);
             Double horario2 = instance.value(instanceIndex++);
             Double horario3 = instance.value(instanceIndex++);
+            
+            Double dominante = instance.value(instanceIndex++);
+            Double sumiso = instance.value(instanceIndex++);
+            Double amistoso = instance.value(instanceIndex++);
+            Double no_amistoso = instance.value(instanceIndex++);
+            Double tarea_symlog = instance.value(instanceIndex++);
+            Double socio_emocional_symlog = instance.value(instanceIndex++);
 
             Double cant_mensajes = instance.value(instanceIndex);
 
@@ -104,15 +113,7 @@ public class PredictorFase2 extends Predictor{
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol);
 
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);
-            values[valuesIndex++] = finalizador_companeros;
-            values[valuesIndex++] = impulsor_companeros;
-            values[valuesIndex++] = cerebro_companeros;
-            values[valuesIndex++] = colaborador_companeros;
-            values[valuesIndex++] = especialista_companeros;
-            values[valuesIndex++] = implementador_companeros;
-            values[valuesIndex++] = monitor_companeros;
-            values[valuesIndex++] = investigador_companeros;
-            values[valuesIndex++] = coordinador_companeros;
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol_comp);
 
             values[valuesIndex++] = C1;
             values[valuesIndex++] = C2;
@@ -137,16 +138,30 @@ public class PredictorFase2 extends Predictor{
             values[valuesIndex++] = horario1;
             values[valuesIndex++] = horario2;
             values[valuesIndex++] = horario3;
+            values[valuesIndex++] = dominante;
+            values[valuesIndex++] = sumiso;
+            values[valuesIndex++] = amistoso;
+            values[valuesIndex++] = no_amistoso;
+            values[valuesIndex++] = tarea_symlog;
+            values[valuesIndex++] = socio_emocional_symlog;
             values[valuesIndex]= cant_mensajes;
 
             Instance newInstance = new DenseInstance(1.0, values);
             if (values[0] == -1.0)
                 newInstance.setMissing(sentencesDataset.attribute(0));
+            
+            if (values[2] == -1.0)
+                newInstance.setMissing(sentencesDataset.attribute(2));
 
             sentencesDataset.add(newInstance);
 
         }
+        
+        PredictorFase2Grupo predictorFase2Grupo = new PredictorFase2Grupo();
+        predictorFase2Grupo.predecir(pathGrupo, attributesToRemove, "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, att_tipo_comp, sentencesDataset);
+        
         return sentencesDataset;
     }
+
 
 }

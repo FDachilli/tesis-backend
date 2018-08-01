@@ -10,6 +10,8 @@ import org.json.JSONException;
 
 import com.tesis.commons.IpaClasiffier;
 import com.tesis.predictor.PredictorDirecto;
+import com.tesis.predictor.PredictorFase2;
+import com.tesis.predictor.grupo.PredictorDirectoGrupo;
 
 @Path("roles")
 public class RolesService {
@@ -46,7 +48,37 @@ public class RolesService {
             predictorDirecto.predecirDirecto("C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenDirecto.arff", namesClasificadores[j]);
         }
 		
-		return "Predicio directo";
+		return "Predijo directo";
+	}
+	
+	@GET
+	@Path("/predecirDirectoGrupo")
+	public String predecirDirectoGrupo() throws Exception {
+		//TODO tener un path temporal con el archivo y despues borrarlo (cuando mandan una sola conversacion, sino recibis el archivo completo)
+		
+		String[] namesClasificadores = {"J48"};
+		String prediccion="";
+        PredictorDirectoGrupo predictorDirectoGrupo = new PredictorDirectoGrupo();
+        for (int j = 0; j < namesClasificadores.length; j++) {
+        	predictorDirectoGrupo.predecirDirectoGrupo("C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenGrupoDirecto.arff", namesClasificadores[j]);
+        }
+		
+		return "Predijo directo grupo";
+	}
+	
+	@GET
+	@Path("/predecirFase2")
+	public String predecirFase2() throws Exception {
+		//TODO tener un path temporal con el archivo y despues borrarlo (cuando mandan una sola conversacion, sino recibis el archivo completo)
+		
+		String[] namesClasificadores = {"J48"};
+		String prediccion="";
+        PredictorFase2 predictorDirectoGrupo = new PredictorFase2();
+        for (int j = 0; j < namesClasificadores.length; j++) {
+        	predictorDirectoGrupo.predecirFase2("C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenFase2.arff", namesClasificadores[j]);
+        }
+		
+		return "Predijo fase 2";
 	}
 	
 }

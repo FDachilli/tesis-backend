@@ -45,7 +45,7 @@ public class WekaRoles {
     }
 
     public static Attribute classRolAttribute() {
-        ArrayList<String> labels = new ArrayList();
+        ArrayList<String> labels = new ArrayList<>();
         labels.add("finalizador");
         labels.add("impulsor");
         labels.add("cerebro");
@@ -60,7 +60,7 @@ public class WekaRoles {
     }
 
     public static Attribute classRolCompanerosAttribute() {
-        ArrayList<String> labels = new ArrayList();
+        ArrayList<String> labels = new ArrayList<>();
         labels.add("finalizador");
         labels.add("impulsor");
         labels.add("cerebro");
@@ -76,7 +76,7 @@ public class WekaRoles {
     
     public static ArrayList<Attribute> getSymlogAttributes() {
 
-        ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+        ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("dominante_symlog"));
         attributes.add(new Attribute("sumiso_symlog"));
         attributes.add(new Attribute("amistoso_symlog"));
@@ -87,7 +87,7 @@ public class WekaRoles {
     }
 
     public static Attribute classTipoRolAttribute() {
-        ArrayList<String> labels = new ArrayList();
+        ArrayList<String> labels = new ArrayList<>();
         labels.add("social");
         labels.add("mental");
         labels.add("accion");
@@ -97,7 +97,7 @@ public class WekaRoles {
     }
 
     public static Attribute classTipoRolCompanerosAttribute() {
-        ArrayList<String> labels = new ArrayList();
+        ArrayList<String> labels = new ArrayList<>();
         labels.add("social");
         labels.add("mental");
         labels.add("accion");
@@ -113,10 +113,6 @@ public class WekaRoles {
         options[1] = attsToRemove;
         Remove remove = new Remove();                         // new instance of filter
         remove.setOptions(options);
-        //Aplico filtros a dataset de entrenamiento
-        /*remove.setInputFormat(trainDataset);
-        trainDataset = Filter.useFilter(trainDataset, remove);*/
-        //Aplico filtros a dataset de testeo
         remove.setInputFormat(arff);
         return Filter.useFilter(arff, remove);
 
@@ -183,24 +179,5 @@ public class WekaRoles {
         clasificadores.add(mcModel);
         return clasificadores;
     }
-
-    /*public static ArrayList<Attribute> getRolesCompanerosAttributes() {
-
-        // Atributos de freeling
-        ArrayList<Attribute> attributes = new ArrayList<Attribute>();
-
-        attributes.add(new Attribute("finalizador_companeros"));
-        attributes.add(new Attribute("impulsor_companeros"));
-        attributes.add(new Attribute("cerebro_companeros"));
-        attributes.add(new Attribute("colaborador_companeros"));
-        attributes.add(new Attribute("especialista_companeros"));
-        attributes.add(new Attribute("implementador_companeros"));
-        attributes.add(new Attribute("monitor_companeros"));
-        attributes.add(new Attribute("investigador_companeros"));
-        attributes.add(new Attribute("coordinador_companeros"));
-
-        return attributes;
-    }*/
-
 
 }
