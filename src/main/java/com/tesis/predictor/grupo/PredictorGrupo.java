@@ -12,7 +12,7 @@ import weka.core.converters.ConverterUtils;
 
 public abstract class PredictorGrupo extends PredictorAbstracto{
 	
-    public Instances predecir(String unlabeledFilePath, String attributesToRemove, String pathModel, Attribute attPred, Instances labeled) throws Exception {
+    public Instances predecir(String unlabeledFilePath, String attributesToRemove, String pathModel, Instances labeled, int indiceAttPred, String posNombre) throws Exception {
     	//TODO una carpeta modelos y despues que se divida en directos y en fases.
         Instances unlabeled = Weka.loadDataset(unlabeledFilePath);
 
@@ -22,9 +22,9 @@ public abstract class PredictorGrupo extends PredictorAbstracto{
         // set class attribute
         unlabeled.setClassIndex(0);
         //TODO por parametro !!!!
-        labeled.setClassIndex(2);
+        labeled.setClassIndex(indiceAttPred);
         
-        unlabeled = WekaRoles.removeAttributes(unlabeled, "2");
+        unlabeled = WekaRoles.removeAttributes(unlabeled, posNombre);
 
         // label instances
         for (int i = 0; i < unlabeled.numInstances(); i++) {

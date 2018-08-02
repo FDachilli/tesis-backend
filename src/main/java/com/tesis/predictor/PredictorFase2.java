@@ -26,7 +26,7 @@ public class PredictorFase2 extends Predictor{
             results.setPath(resultPath);
             results.setLabeledInstances(predecir(filePath,
                     resultPath
-                    ,"2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2\\" + model + Constants.DAT_FILE).toString());
+                    ,"2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2\\" + model + Constants.DAT_FILE, "2").toString());
             return results;
     }
 
@@ -38,8 +38,7 @@ public class PredictorFase2 extends Predictor{
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(WekaRoles.classTipoRolAttribute());
         attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
-        Attribute att_tipo_comp = WekaRoles.classTipoRolCompanerosAttribute();
-        attributes.add(att_tipo_comp);
+        attributes.add(WekaRoles.classTipoRolCompanerosAttribute());
 
         //TODO obtenerlos de Weka roles 
         for (int i=1; i<=12; i++){
@@ -158,7 +157,7 @@ public class PredictorFase2 extends Predictor{
         }
         
         PredictorFase2Grupo predictorFase2Grupo = new PredictorFase2Grupo();
-        predictorFase2Grupo.predecir(pathGrupo, attributesToRemove, "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, att_tipo_comp, sentencesDataset);
+        predictorFase2Grupo.predecir(pathGrupo, attributesToRemove, "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "2");
         
         return sentencesDataset;
     }

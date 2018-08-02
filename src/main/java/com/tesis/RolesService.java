@@ -11,6 +11,8 @@ import org.json.JSONException;
 import com.tesis.commons.IpaClasiffier;
 import com.tesis.predictor.PredictorDirecto;
 import com.tesis.predictor.PredictorFase2;
+import com.tesis.predictor.PredictorFase3;
+import com.tesis.predictor.PredictorFases;
 import com.tesis.predictor.grupo.PredictorDirectoGrupo;
 
 @Path("roles")
@@ -79,6 +81,21 @@ public class RolesService {
         }
 		
 		return "Predijo fase 2";
+	}
+	
+	@GET
+	@Path("/predecirFases")
+	public String predecirFases() throws Exception {
+		//TODO tener un path temporal con el archivo y despues borrarlo (cuando mandan una sola conversacion, sino recibis el archivo completo)
+		
+		String[] namesClasificadores = {"J48"};
+		String prediccion="";
+        PredictorFases predictorDirectoGrupo = new PredictorFases();
+        for (int j = 0; j < namesClasificadores.length; j++) {
+        	predictorDirectoGrupo.predecirFases("C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenFase2.arff", namesClasificadores[j], namesClasificadores[j]);
+        }
+		
+		return "Predijo fase 3";
 	}
 	
 }

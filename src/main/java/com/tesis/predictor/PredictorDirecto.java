@@ -46,7 +46,7 @@ public class PredictorDirecto extends Predictor{
         	//TODO sacar el path de grupos del organizador
            Instances prediccionDirecta = predecir(filePath,
                    Constants.PREDICTIONS_DIRECTO_FOLDER + String.valueOf(System.currentTimeMillis()) + "-" + model+ Constants.ARFF_FILE,
-                   "2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE);
+                   "2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE, "2");
            System.out.println(prediccionDirecta.toString());
 
     }
@@ -59,8 +59,7 @@ public class PredictorDirecto extends Predictor{
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(WekaRoles.classRolAttribute());
         attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
-        Attribute attRolCompaneros = WekaRoles.classRolCompanerosAttribute();
-        attributes.add(attRolCompaneros);
+        attributes.add(WekaRoles.classRolCompanerosAttribute());
 
         for (int i=1; i<=12; i++){
             attributes.add(new Attribute("C"+i));
@@ -180,7 +179,7 @@ public class PredictorDirecto extends Predictor{
         PredictorDirectoGrupo predictorDirectoGrupo = new PredictorDirectoGrupo();
 
         return predictorDirectoGrupo.predecir(pathGrupo, "2-4, 6-6",
-        		"C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE, attRolCompaneros, sentencesDataset);
+        		"C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "3");
     }
 
 

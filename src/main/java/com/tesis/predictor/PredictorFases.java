@@ -26,6 +26,7 @@ public class PredictorFases {
         PredictorFase2 predictorFase2 = new PredictorFase2();
         FaseResultados fase2Results = predictorFase2.predecirFase2(filePath, modelFase2);
         PredictorFase3 predictorFase3 = new PredictorFase3();
+        //TODO agarrar la instancia directamente
         FaseResultados fase3Results = predictorFase3.predecirFase3(fase2Results.getPath(), modelFase3);
         System.out.println (fase3Results.getLabeledInstances());
     }
