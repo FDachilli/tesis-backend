@@ -31,6 +31,9 @@ public class Constants {
     public static final String DIRECTO_GRUPOS_LABELED_FOLDER = "results" + File.separator + "labeled" + File.separator + "Grupos_Directo" + File.separator;
     public static final String FASES_GRUPOS_LABELED_FOLDER = "results" + File.separator + "labeled" + File.separator + "Grupos_Fases" + File.separator;
 
+    public static final String TEMP_FOLDER = "temp" + File.separator;
+    public static final String USER_DIR = System.getProperty("user.dir");
+    public static final String TEMP_PRED_FOLDER_TO_ORG = USER_DIR + File.separator + TEMP_FOLDER + "organizar" + File.separator;
     public static final String ARFF_FILE = ".arff";
     public static final String JSON_FILE = ".json";
     public static final String XLSX_FILE = ".xlsx";

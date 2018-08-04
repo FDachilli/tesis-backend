@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -70,5 +71,15 @@ public class Util {
                 return "";
 
             return str;
+        }
+        
+        public void deleteFolder(String path) {
+        	File index = new File("/home/Work/Indexer1");
+        	String[]entries = index.list();
+        	for(String s: entries){
+        	    File currentFile = new File(index.getPath(),s);
+        	    currentFile.delete();
+        	}
+        	index.delete();
         }
 }

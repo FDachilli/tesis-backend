@@ -8,8 +8,8 @@ import org.weka.Weka;
 
 import com.tesis.commons.Constants;
 import com.tesis.organizador.Organizador;
-import com.tesis.parser.DirectoParser;
-import com.tesis.parser.GrupoDirectoParser;
+import com.tesis.parser.entrenamiento.DirectoParserEntrenamiento;
+import com.tesis.parser.entrenamiento.GrupoDirectoParserEntrenamiento;
 import com.tesis.predictor.Predictor;
 import com.tesis.weka.WekaRoles;
 
@@ -27,7 +27,7 @@ public class PredictorDirectoGrupo extends PredictorGrupo {
 	            //Limpio directorio para despues no procesar archivos viejos
 	            FileUtils.cleanDirectory(new File(Constants.DIRECTO_LABELED_FOLDER));
 	            //Lee el json y divide las conversaciones dejando los resultados en "results\labeled\Directo"
-	            GrupoDirectoParser parser = new GrupoDirectoParser();
+	            GrupoDirectoParserEntrenamiento parser = new GrupoDirectoParserEntrenamiento();
 	            parser.parseJson(filePath);
 	            Organizador organizador = new Organizador();
 	            organizador.orgainzar_carpeta(Constants.DIRECTO_LABELED_FOLDER, "./ResumenDirecto.arff");

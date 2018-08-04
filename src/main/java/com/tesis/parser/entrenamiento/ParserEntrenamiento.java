@@ -1,4 +1,4 @@
-package com.tesis.parser;
+package com.tesis.parser.entrenamiento;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +17,7 @@ import java.io.*;
 import java.text.ParseException;
 import java.util.*;
 
-public abstract class Parser {
+public abstract class ParserEntrenamiento {
 
     protected HashMap<String, String> rol_principal = new HashMap<>();
     protected IpaClasiffier ipaClasiffier = new IpaClasiffier();

@@ -1,4 +1,4 @@
-package com.tesis.parser;
+package com.tesis.parser.entrenamiento;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tesis.commons.Constants;
@@ -22,7 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class GrupoDirectoParser extends Parser{
+public class GrupoDirectoParserEntrenamiento extends ParserEntrenamiento{
     /****
      * Prepara los archivos para los modelos individuales de cada grupo, a partir de los cuale
      */

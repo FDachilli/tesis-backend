@@ -17,15 +17,14 @@ import java.util.ArrayList;
 public class PredictorFase2 extends Predictor{
 
 
-    public FaseResultados predecirFase2 (String filePath, String modelPred) throws Exception {
+    public FaseResultados predecirFase2 (String filePath, String modelPred, boolean total) throws Exception {
 
     		model = modelPred;
     		pathGrupo = "C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenGrupoFase2.arff";
             FaseResultados results = new FaseResultados();
             String resultPath = Constants.FASES_FOLDER + Constants.FASE_DOS_FOLDER + Constants.PREDICTIONS_FOLDER +  String.valueOf(System.currentTimeMillis()) + "-" + model + Constants.ARFF_FILE;
             results.setPath(resultPath);
-            results.setLabeledInstances(predecir(filePath,
-                    resultPath
+            results.setLabeledInstances(predecir(filePath
                     ,"2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2\\" + model + Constants.DAT_FILE, "2").toString());
             return results;
     }

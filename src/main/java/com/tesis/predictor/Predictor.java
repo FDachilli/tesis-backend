@@ -13,7 +13,7 @@ public abstract class Predictor extends PredictorAbstracto{
 	protected String pathGrupo;
 	protected String model;
 
-    public Instances predecir(String unlabeledFilePath, String labeledFilePath, String attributesToRemove, String pathModel, String posNombre) throws Exception {
+    public Instances predecir(String unlabeledFilePath, String attributesToRemove, String pathModel, String posNombre) throws Exception {
     	//TODO una carpeta modelos y despues que se divida en directos y en fases.
         Instances unlabeled = Weka.loadDataset(unlabeledFilePath);
 
@@ -36,7 +36,7 @@ public abstract class Predictor extends PredictorAbstracto{
         }
 
         // Save newly labeled data
-        ConverterUtils.DataSink.write(labeledFilePath, labeled);
+        //ConverterUtils.DataSink.write(labeledFilePath, labeled);
         return labeled;
 
     }

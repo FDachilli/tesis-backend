@@ -1,14 +1,13 @@
-package com.tesis.parser;
+package com.tesis.parser.entrenamiento;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tesis.commons.Constants;
 import com.tesis.commons.Util;
 import com.tesis.hangouts.*;
-import com.tesis.weka.WekaRoles;
-
 import org.json.JSONException;
 import org.preprocessDataset.FreelingAnalyzer;
 import org.weka.Weka;
+import com.tesis.weka.WekaRoles;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -21,7 +20,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class FasesParser extends Parser{
+public class GrupoFasesParserEntrenamiento extends ParserEntrenamiento {
+
 
     public void parseJson(String fileName) throws ParseException, JSONException, FileNotFoundException {
 
@@ -44,14 +44,11 @@ public class FasesParser extends Parser{
 
             List<ConversationStateRoot> conversationStateRoots = hangoutsJSON.getConversationStatesRoot();
 
-
-
             Hashtable<String, String> names = getNamesParticipantes(conversationStateRoots);
             List<String> listIdConversacionesIgnoradas = getConversacionesIgnoradas(conversationStateRoots, rolesAutodefinidos);
-
+            //pe16_lt1_g06
             for (ConversationStateRoot conversationStateRoot : conversationStateRoots) {
-                if (!listIdConversacionesIgnoradas.contains(conversationStateRoot.getConversationId().getId())&& conversationStateRoot.getConversationState().getConversation().getName()!=null
-                        && conversationStateRoot.getConversationState().getConversation().getName().contains("PE16")){
+                if (!listIdConversacionesIgnoradas.contains(conversationStateRoot.getConversationId().getId()) && conversationStateRoot.getConversationState().getConversation().getName()!=null){
                     //SOLO AGREGAMOS LAS CONVERSACIONES COMPLETAS
                     Boolean first = true;
                     Date dateFirst = null;
@@ -95,22 +92,22 @@ public class FasesParser extends Parser{
                         //Seteo fecha
                         atributos.setFecha(stringDate);
                         //Seteo diferencia de horas
-                        atributos.setDiferenciaHoras(diferenciaHorasDias(dateFirst, date));
+                     //   atributos.setDiferenciaHoras(diferenciaHorasDias(dateFirst, date));
 
                        /* if (rolesCompañeros.containsKey(event.getSenderId().getGaiaId())){
                             atributos.setRolesCompaneros(rolesCompañeros.get(event.getSenderId().getGaiaId()));
                         }*/
 
+
                         if (rolesCompaneros.containsKey(event.getSenderId().getGaiaId())){
                             atributos.setRolCompaneros(getRolPorGrupoCompanero(rolesCompaneros.get(event.getSenderId().getGaiaId()), conversationStateRoot.getConversationState().getConversation().getName()));
                         }
 
-
-                        if (rolesAutodefinidos.containsKey(event.getSenderId().getGaiaId())) {
+                        /*if (rolesAutodefinidos.containsKey(event.getSenderId().getGaiaId())) {
                             List<Double> lista_roles_autodefinidos = rolesAutodefinidos.get(event.getSenderId().getGaiaId());
                             atributos.setRolesAutodefinidos(lista_roles_autodefinidos);
 
-                        }
+                        }*/
 
                         if (rol_principal.containsKey(event.getSenderId().getGaiaId())){
                             atributos.setRol(rol_principal.get(event.getSenderId().getGaiaId()));
@@ -184,19 +181,17 @@ public class FasesParser extends Parser{
         //Attribute attMensaje = new Attribute(Weka.MENSAJE, (ArrayList<String>) null);
         Attribute attFecha = new Attribute("fecha","yyyy-MM-dd HH:mm:ss");
 
-       // attributes.add(attMensaje);
+        // attributes.add(attMensaje);
 
         //Atributos roles
         attributes.add(attFecha);
-        attributes.add(WekaRoles.classTipoRolCompanerosAttribute());
-      //  attributes.add(new Attribute("diferenciadehoras"));
-       // attributes.addAll(getRolesAttributes());
+     //   attributes.add(new Attribute("diferenciadehoras"));
+        // attributes.addAll(getRolesAttributes());
         /*TODO: Se le podria cambiar en vez de companeros por secundario?
                 Ya habia un atr. con un nombre muy parecido.
          */
 
-
-       // attributes.addAll(WekaRoles.getRolesCompanerosAttributes());
+        // attributes.addAll(WekaRoles.getRolesCompanerosAttributes());
 
         //Atributos freeling
         //attributes.addAll(getFreelingAttributes());
@@ -212,16 +207,32 @@ public class FasesParser extends Parser{
             String classReaction = Constants.reacciones.get(Integer.parseInt(conducta));
             String classArea = Constants.areas.get(Integer.parseInt(conducta));
             String nombre = instance.stringValue(instanceIndex++);
-        //    String mensaje = instance.stringValue(instanceIndex++);
+            //    String mensaje = instance.stringValue(instanceIndex++);
+            String tipo_rol = "";
+
+            if (lista_atributos.get(i).getRolCompaneros()== null || lista_atributos.get(i).getRolCompaneros().equals("")){
+                tipo_rol = Constants.tipos_rol.get(lista_atributos.get(i).getRol());
+            }else {
+                tipo_rol = Constants.tipos_rol.get(lista_atributos.get(i).getRolCompaneros());
+            }
+           /* if (lista_atributos.get(i).getRolCompaneros()== null){
+                area = "social";
+            }else {
+                if (lista_atributos.get(i).getRolCompaneros().equals("")) {
+                    area = Constants.tipos_rol.get(lista_atributos.get(i).getRol());
+                } else {
+                    area = Constants.tipos_rol.get(lista_atributos.get(i).getRolCompaneros());
+                }
+            }*/
 
             int valuesIndex = 0;
             double[] values = new double[attributes.size()];
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(lista_atributos.get(i).getRol()!= null ? Constants.tipos_rol.get(lista_atributos.get(i).getRol()) : "social");
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(conducta);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classReaction);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classArea);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);
-        //    values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(mensaje);
+            //    values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(mensaje);
 
 
             try {
@@ -230,20 +241,7 @@ public class FasesParser extends Parser{
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            String tipo_rol_companeros = "";
-            if (lista_atributos.get(i).getRolCompaneros()== null){
-                tipo_rol_companeros = "social";
-            }else {
-                if (lista_atributos.get(i).getRolCompaneros().equals("")) {
-                    tipo_rol_companeros = Constants.tipos_rol.get(lista_atributos.get(i).getRol());
-                } else {
-                    tipo_rol_companeros = Constants.tipos_rol.get(lista_atributos.get(i).getRolCompaneros());
-                }
-            }
-
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol_companeros);
-           // values[valuesIndex++] = Double.parseDouble(lista_atributos.get(i).getDiferenciaHoras());
+            // values[valuesIndex++] = Double.parseDouble(lista_atributos.get(i).getDiferenciaHoras());
 
          /*   values = getRolesAutodefinidosValues(values, valuesIndex, lista_atributos.get(i).getRolesAutodefinidos());
             valuesIndex = valuesIndex + 9;
@@ -251,14 +249,14 @@ public class FasesParser extends Parser{
             /*values = getRolesCompanerosValues(values, valuesIndex, lista_atributos.get(i).getRolesCompaneros());
             valuesIndex = valuesIndex + 9;*/
 
-           // values = getFreelingValues(values, valuesIndex, instance, instanceIndex);
+            // values = getFreelingValues(values, valuesIndex, instance, instanceIndex);
 
             Instance newInstance = new DenseInstance(1.0, values);
 
             sentencesDataset.add(newInstance);
 
         }
-        Weka.saveDataset(sentencesDataset, Constants.FASES_LABELED_FOLDER + Constants.FASE_DOS_FOLDER + String.valueOf(System.currentTimeMillis()) + "-roles" + Constants.ARFF_FILE);
+        Weka.saveDataset(sentencesDataset, Constants.FASES_GRUPOS_LABELED_FOLDER + Constants.FASE_DOS_FOLDER + String.valueOf(System.currentTimeMillis()) + "-roles" + Constants.ARFF_FILE);
 
     }
 
@@ -278,25 +276,23 @@ public class FasesParser extends Parser{
         Attribute attNombre = new Attribute(Weka.NOMBRE, (ArrayList<String>) null);
         attributes.add(attNombre);
 
-       // Attribute attMensaje = new Attribute(Weka.MENSAJE, (ArrayList<String>) null);
+        // Attribute attMensaje = new Attribute(Weka.MENSAJE, (ArrayList<String>) null);
         Attribute attFecha = new Attribute("fecha","yyyy-MM-dd HH:mm:ss");
 
         //attributes.add(attMensaje);
 
         //Atributos roles
         attributes.add(attFecha);
-        attributes.add(WekaRoles.classTipoRolCompanerosAttribute());
-        attributes.add(WekaRoles.classRolCompanerosAttribute());
-      //  attributes.add(new Attribute("diferenciadehoras"));
-       // attributes.addAll(getRolesAttributes());
+        //  attributes.add(new Attribute("diferenciadehoras"));
+        // attributes.addAll(getRolesAttributes());
         /*TODO: Se le podria cambiar en vez de companeros por secundario?
                 Ya habia un atr. con un nombre muy parecido.
          */
 
-       // attributes.addAll(WekaRoles.getRolesCompanerosAttributes());
+        // attributes.addAll(WekaRoles.getRolesCompanerosAttributes());
 
         //Atributos freeling
-       // attributes.addAll(getFreelingAttributes());
+        // attributes.addAll(getFreelingAttributes());
 
         Instances sentencesDataset = new Instances("chat", attributes, 0);
 
@@ -309,17 +305,31 @@ public class FasesParser extends Parser{
             String classReaction = Constants.reacciones.get(Integer.parseInt(conducta));
             String classArea = Constants.areas.get(Integer.parseInt(conducta));
             String nombre = instance.stringValue(instanceIndex++);
-           // String mensaje = instance.stringValue(instanceIndex++);
+            // String mensaje = instance.stringValue(instanceIndex++);
+            String rol;
+            if (lista_atributos.get(i).getRolCompaneros()== null || lista_atributos.get(i).getRolCompaneros().equals("")){
+                rol = lista_atributos.get(i).getRol();
+            }else {
+                rol = lista_atributos.get(i).getRolCompaneros();
+            }
+
+            String tipo_rol = "";
+
+            if (lista_atributos.get(i).getRolCompaneros()== null || lista_atributos.get(i).getRolCompaneros().equals("")){
+                tipo_rol = Constants.tipos_rol.get(lista_atributos.get(i).getRol());
+            }else {
+                tipo_rol = Constants.tipos_rol.get(lista_atributos.get(i).getRolCompaneros());
+            }
 
             int valuesIndex = 0;
             double[] values = new double[attributes.size()];
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(lista_atributos.get(i).getRol()!= null ? lista_atributos.get(i).getRol() : "coordinador");
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(lista_atributos.get(i).getRol()!= null ? Constants.tipos_rol.get(lista_atributos.get(i).getRol()) : "social");
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(rol);
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(conducta);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classReaction);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classArea);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);
-         //   values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(mensaje);
+            //   values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(mensaje);
 
 
             try {
@@ -328,33 +338,6 @@ public class FasesParser extends Parser{
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            String tipo_rol_companeros = "";
-            if (lista_atributos.get(i).getRolCompaneros()== null){
-                tipo_rol_companeros = "social";
-            }else {
-                if (lista_atributos.get(i).getRolCompaneros().equals("")) {
-                    tipo_rol_companeros = Constants.tipos_rol.get(lista_atributos.get(i).getRol());
-                } else {
-                    tipo_rol_companeros = Constants.tipos_rol.get(lista_atributos.get(i).getRolCompaneros());
-                }
-            }
-
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol_companeros);
-
-            String rol_companeros;
-            if (lista_atributos.get(i).getRolCompaneros()== null){
-                rol_companeros = "coordinador";
-            }else {
-                if (lista_atributos.get(i).getRolCompaneros().equals("")) {
-                    rol_companeros = lista_atributos.get(i).getRol();
-                } else {
-                    rol_companeros = lista_atributos.get(i).getRolCompaneros();
-                }
-            }
-
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(rol_companeros);
-
             //   values[valuesIndex++] = Double.parseDouble(lista_atributos.get(i).getDiferenciaHoras());
 
         /*    values = getRolesAutodefinidosValues(values, valuesIndex, lista_atributos.get(i).getRolesAutodefinidos());
@@ -370,8 +353,10 @@ public class FasesParser extends Parser{
             sentencesDataset.add(newInstance);
 
         }
-        Weka.saveDataset(sentencesDataset, Constants.FASES_LABELED_FOLDER + Constants.FASE_TRES_FOLDER + String.valueOf(System.currentTimeMillis()) + "-roles" + Constants.ARFF_FILE);
+        Weka.saveDataset(sentencesDataset, Constants.FASES_GRUPOS_LABELED_FOLDER + Constants.FASE_TRES_FOLDER + String.valueOf(System.currentTimeMillis()) + "-roles" + Constants.ARFF_FILE);
 
     }
+
+
 
 }

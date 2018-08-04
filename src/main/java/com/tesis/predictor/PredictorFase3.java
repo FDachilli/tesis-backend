@@ -23,8 +23,7 @@ public class PredictorFase3 extends Predictor{
         FaseResultados results = new FaseResultados();
         String resultPath = Constants.FASES_FOLDER + Constants.FASE_TRES_FOLDER + Constants.PREDICTIONS_FOLDER +  String.valueOf(System.currentTimeMillis()) + "-" + modelPred + Constants.ARFF_FILE;
         results.setPath(resultPath);
-        results.setLabeledInstances(predecir(filePath,
-                resultPath
+        results.setLabeledInstances(predecir(filePath
                 ,"", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase3\\" + model + Constants.DAT_FILE, "3").toString());
         return results;
     }

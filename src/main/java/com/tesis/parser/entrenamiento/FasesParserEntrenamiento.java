@@ -1,4 +1,4 @@
-package com.tesis.parser;
+package com.tesis.parser.entrenamiento;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tesis.commons.Constants;
@@ -21,7 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class DirectoParser extends Parser {
+public class FasesParserEntrenamiento extends ParserEntrenamiento{
 
     public void parseJson(String fileName) throws ParseException, JSONException, FileNotFoundException {
 
@@ -37,6 +37,7 @@ public class DirectoParser extends Parser {
         files_feedbacks.add("feedbacktp5_2016.json");
         HashMap<String,List<String>> rolesCompaneros = getRolesCompaneros(files_feedbacks);
 
+
         HangoutsJSON hangoutsJSON;
         try {
             hangoutsJSON = mapper.readValue(new File(fileName), HangoutsJSON.class);
@@ -49,7 +50,8 @@ public class DirectoParser extends Parser {
             List<String> listIdConversacionesIgnoradas = getConversacionesIgnoradas(conversationStateRoots, rolesAutodefinidos);
 
             for (ConversationStateRoot conversationStateRoot : conversationStateRoots) {
-                if (!listIdConversacionesIgnoradas.contains(conversationStateRoot.getConversationId().getId()) && conversationStateRoot.getConversationState().getConversation().getName()!=null){
+                if (!listIdConversacionesIgnoradas.contains(conversationStateRoot.getConversationId().getId())&& conversationStateRoot.getConversationState().getConversation().getName()!=null
+                        && conversationStateRoot.getConversationState().getConversation().getName().contains("PE16")){
                     //SOLO AGREGAMOS LAS CONVERSACIONES COMPLETAS
                     Boolean first = true;
                     Date dateFirst = null;
@@ -61,6 +63,9 @@ public class DirectoParser extends Parser {
                         Atributos atributos = new Atributos();
                         ChatMessage chatMessage;
                         MessageContent messageContent;
+
+
+
                         //El timestamp estaba en segundos por lo tanto hay que
                         //Dividirlo por 1000 para que quede en ms y de el valor correct
                         Date date = new Date(event.getTimeStamp() / 1000);
@@ -92,13 +97,14 @@ public class DirectoParser extends Parser {
                         //Seteo diferencia de horas
                         atributos.setDiferenciaHoras(diferenciaHorasDias(dateFirst, date));
 
-                      /*  if (rolesCompañeros.containsKey(event.getSenderId().getGaiaId())){
+                       /* if (rolesCompañeros.containsKey(event.getSenderId().getGaiaId())){
                             atributos.setRolesCompaneros(rolesCompañeros.get(event.getSenderId().getGaiaId()));
                         }*/
 
                         if (rolesCompaneros.containsKey(event.getSenderId().getGaiaId())){
                             atributos.setRolCompaneros(getRolPorGrupoCompanero(rolesCompaneros.get(event.getSenderId().getGaiaId()), conversationStateRoot.getConversationState().getConversation().getName()));
                         }
+
 
                         if (rolesAutodefinidos.containsKey(event.getSenderId().getGaiaId())) {
                             List<Double> lista_roles_autodefinidos = rolesAutodefinidos.get(event.getSenderId().getGaiaId());
@@ -140,6 +146,7 @@ public class DirectoParser extends Parser {
                     if (!newFileName.equals("")){
                         saveRolArff (newFileName, fileContent, lista_atributos);
                     }
+
                 }
 
             }
@@ -149,18 +156,118 @@ public class DirectoParser extends Parser {
         }
     }
 
+
     private void saveRolArff (String fileName, String fileContent, List<Atributos> lista_atributos) throws FileNotFoundException, ParseException {
         saveToFile(fileName, fileContent);
         System.out.println("Clasificando: " + fileName);
         String resultfile = ipaClasiffier.parseConductaDirecto(fileName);
-        agregarAtributos (resultfile, lista_atributos);
+        agregarAtributosFase2 (resultfile, lista_atributos);
+        agregarAtributosFase3 (resultfile, lista_atributos);
     }
 
-    public String agregarAtributos(String pathfile, List<Atributos> lista_atributos) {
 
-        Instances dataset = Weka.loadDataset(pathfile);
+    private void agregarAtributosFase2(String resultfile, List<Atributos> lista_atributos) {
+
+        Instances dataset = Weka.loadDataset(resultfile);
+        ArrayList<Attribute> attributes = new ArrayList<>();
+        attributes.add(WekaRoles.classTipoRolAttribute());
+        attributes.add(Weka.classConductaAttribute());
+        // Atributo class_reaccion
+        Attribute attClassReaccion = Weka.classReaccionAttribute();
+        // Atributo class_area
+        Attribute attClassArea = Weka.classAreaAttribute();
+        attributes.add(attClassReaccion);
+        attributes.add(attClassArea);
+        Attribute attNombre = new Attribute(Weka.NOMBRE, (ArrayList<String>) null);
+        attributes.add(attNombre);
+
+        //Attribute attMensaje = new Attribute(Weka.MENSAJE, (ArrayList<String>) null);
+        Attribute attFecha = new Attribute("fecha","yyyy-MM-dd HH:mm:ss");
+
+       // attributes.add(attMensaje);
+
+        //Atributos roles
+        attributes.add(attFecha);
+        attributes.add(WekaRoles.classTipoRolCompanerosAttribute());
+      //  attributes.add(new Attribute("diferenciadehoras"));
+       // attributes.addAll(getRolesAttributes());
+        /*TODO: Se le podria cambiar en vez de companeros por secundario?
+                Ya habia un atr. con un nombre muy parecido.
+         */
+
+
+       // attributes.addAll(WekaRoles.getRolesCompanerosAttributes());
+
+        //Atributos freeling
+        //attributes.addAll(getFreelingAttributes());
+
+        Instances sentencesDataset = new Instances("chat", attributes, 0);
+
+
+        for (int i = 0; i < dataset.numInstances(); i++) {
+
+            Instance instance = dataset.instance(i);
+            int instanceIndex = 0;
+            String conducta = instance.stringValue(instanceIndex++);
+            String classReaction = Constants.reacciones.get(Integer.parseInt(conducta));
+            String classArea = Constants.areas.get(Integer.parseInt(conducta));
+            String nombre = instance.stringValue(instanceIndex++);
+        //    String mensaje = instance.stringValue(instanceIndex++);
+
+            int valuesIndex = 0;
+            double[] values = new double[attributes.size()];
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(lista_atributos.get(i).getRol()!= null ? Constants.tipos_rol.get(lista_atributos.get(i).getRol()) : "social");
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(conducta);
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classReaction);
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classArea);
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);
+        //    values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(mensaje);
+
+
+            try {
+                values[valuesIndex++] = sentencesDataset.attribute("fecha").parseDate(lista_atributos.get(i).getFecha());
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            String tipo_rol_companeros = "";
+            if (lista_atributos.get(i).getRolCompaneros()== null){
+                tipo_rol_companeros = "social";
+            }else {
+                if (lista_atributos.get(i).getRolCompaneros().equals("")) {
+                    tipo_rol_companeros = Constants.tipos_rol.get(lista_atributos.get(i).getRol());
+                } else {
+                    tipo_rol_companeros = Constants.tipos_rol.get(lista_atributos.get(i).getRolCompaneros());
+                }
+            }
+
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol_companeros);
+           // values[valuesIndex++] = Double.parseDouble(lista_atributos.get(i).getDiferenciaHoras());
+
+         /*   values = getRolesAutodefinidosValues(values, valuesIndex, lista_atributos.get(i).getRolesAutodefinidos());
+            valuesIndex = valuesIndex + 9;
+
+            /*values = getRolesCompanerosValues(values, valuesIndex, lista_atributos.get(i).getRolesCompaneros());
+            valuesIndex = valuesIndex + 9;*/
+
+           // values = getFreelingValues(values, valuesIndex, instance, instanceIndex);
+
+            Instance newInstance = new DenseInstance(1.0, values);
+
+            sentencesDataset.add(newInstance);
+
+        }
+        Weka.saveDataset(sentencesDataset, Constants.FASES_LABELED_FOLDER + Constants.FASE_DOS_FOLDER + String.valueOf(System.currentTimeMillis()) + "-roles" + Constants.ARFF_FILE);
+
+    }
+
+    private void agregarAtributosFase3(String resultfile, List<Atributos> lista_atributos) {
+
+        Instances dataset = Weka.loadDataset(resultfile);
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(WekaRoles.classRolAttribute());
+        attributes.add(WekaRoles.classTipoRolAttribute());
         attributes.add(Weka.classConductaAttribute());
         // Atributo class_reaccion
         Attribute attClassReaccion = Weka.classReaccionAttribute();
@@ -174,10 +281,11 @@ public class DirectoParser extends Parser {
        // Attribute attMensaje = new Attribute(Weka.MENSAJE, (ArrayList<String>) null);
         Attribute attFecha = new Attribute("fecha","yyyy-MM-dd HH:mm:ss");
 
-       // attributes.add(attMensaje);
+        //attributes.add(attMensaje);
 
         //Atributos roles
         attributes.add(attFecha);
+        attributes.add(WekaRoles.classTipoRolCompanerosAttribute());
         attributes.add(WekaRoles.classRolCompanerosAttribute());
       //  attributes.add(new Attribute("diferenciadehoras"));
        // attributes.addAll(getRolesAttributes());
@@ -201,7 +309,38 @@ public class DirectoParser extends Parser {
             String classReaction = Constants.reacciones.get(Integer.parseInt(conducta));
             String classArea = Constants.areas.get(Integer.parseInt(conducta));
             String nombre = instance.stringValue(instanceIndex++);
-          //  String mensaje = instance.stringValue(instanceIndex++);
+           // String mensaje = instance.stringValue(instanceIndex++);
+
+            int valuesIndex = 0;
+            double[] values = new double[attributes.size()];
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(lista_atributos.get(i).getRol()!= null ? lista_atributos.get(i).getRol() : "coordinador");
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(lista_atributos.get(i).getRol()!= null ? Constants.tipos_rol.get(lista_atributos.get(i).getRol()) : "social");
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(conducta);
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classReaction);
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classArea);
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);
+         //   values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(mensaje);
+
+
+            try {
+                values[valuesIndex++] = sentencesDataset.attribute("fecha").parseDate(lista_atributos.get(i).getFecha());
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            String tipo_rol_companeros = "";
+            if (lista_atributos.get(i).getRolCompaneros()== null){
+                tipo_rol_companeros = "social";
+            }else {
+                if (lista_atributos.get(i).getRolCompaneros().equals("")) {
+                    tipo_rol_companeros = Constants.tipos_rol.get(lista_atributos.get(i).getRol());
+                } else {
+                    tipo_rol_companeros = Constants.tipos_rol.get(lista_atributos.get(i).getRolCompaneros());
+                }
+            }
+
+            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol_companeros);
 
             String rol_companeros;
             if (lista_atributos.get(i).getRolCompaneros()== null){
@@ -214,41 +353,24 @@ public class DirectoParser extends Parser {
                 }
             }
 
-            int valuesIndex = 0;
-            double[] values = new double[attributes.size()];
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(lista_atributos.get(i).getRol()!= null ? lista_atributos.get(i).getRol() : "coordinador");
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(conducta);
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classReaction);
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(classArea);
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);
-          //  values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(mensaje);
-
-
-            try {
-                values[valuesIndex++] = sentencesDataset.attribute("fecha").parseDate(lista_atributos.get(i).getFecha());
-            } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(rol_companeros);
-         //   values[valuesIndex++] = Double.parseDouble(lista_atributos.get(i).getDiferenciaHoras());
 
-         /*   values = getRolesAutodefinidosValues(values, valuesIndex, lista_atributos.get(i).getRolesAutodefinidos());
-            valuesIndex = valuesIndex + 9;*/
+            //   values[valuesIndex++] = Double.parseDouble(lista_atributos.get(i).getDiferenciaHoras());
+
+        /*    values = getRolesAutodefinidosValues(values, valuesIndex, lista_atributos.get(i).getRolesAutodefinidos());
+            valuesIndex = valuesIndex + 9;
 
            /* values = getRolesCompanerosValues(values, valuesIndex, lista_atributos.get(i).getRolesCompaneros());
-            valuesIndex = valuesIndex + 9;*/
+            valuesIndex = valuesIndex + 9;
 
-           // values = getFreelingValues(values, valuesIndex, instance, instanceIndex);
+            values = getFreelingValues(values, valuesIndex, instance, instanceIndex);*/
 
             Instance newInstance = new DenseInstance(1.0, values);
 
             sentencesDataset.add(newInstance);
 
         }
-        String resultFilePath = Constants.DIRECTO_LABELED_FOLDER + String.valueOf(System.currentTimeMillis()) + "-roles" + Constants.ARFF_FILE;
-        Weka.saveDataset(sentencesDataset, resultFilePath);
-        return resultFilePath;
+        Weka.saveDataset(sentencesDataset, Constants.FASES_LABELED_FOLDER + Constants.FASE_TRES_FOLDER + String.valueOf(System.currentTimeMillis()) + "-roles" + Constants.ARFF_FILE);
 
     }
 

@@ -4,7 +4,9 @@ import com.tesis.commons.Constants;
 import org.apache.commons.io.FileUtils;
 import org.weka.Weka;
 import com.tesis.organizador.Organizador;
-import com.tesis.parser.DirectoParser;
+import com.tesis.organizador.OrganizadorPrediccion;
+import com.tesis.parser.entrenamiento.DirectoParserEntrenamiento;
+import com.tesis.parser.prediccion.ParserPrediccionDirecto;
 import com.tesis.predictor.grupo.PredictorDirectoGrupo;
 import com.tesis.weka.WekaRoles;
 
@@ -19,36 +21,22 @@ import java.util.ArrayList;
 
 public class PredictorDirecto extends Predictor{
 
-    public void predecirDirecto (String filePath, String modelPred) throws Exception {
-
-        if (filePath.contains(Constants.JSON_FILE)) {
-            //Limpio directorio para despues no procesar archivos viejos
-            FileUtils.cleanDirectory(new File(Constants.DIRECTO_LABELED_FOLDER));
-            //Lee el json y divide las conversaciones dejando los resultados en "results\labeled\Directo"
-            DirectoParser parser = new DirectoParser();
-            parser.parseJson(filePath);
-            Organizador organizador = new Organizador();
-            organizador.orgainzar_carpeta(Constants.DIRECTO_LABELED_FOLDER, "./ResumenDirecto.arff");
+    public void predecirDirecto (String file, String modelPred, boolean total) throws Exception {
+    	ParserPrediccionDirecto parserPrediccionDirecto = new ParserPrediccionDirecto();
+        if (!total) {
+    		parserPrediccionDirecto.parseJsonParcial(file);
+        }else {
+        	parserPrediccionDirecto.parseJsonTotal(file);
         }
-       /* else{
-            if (filePath.contains(Constants.ARFF_FILE)) {
-                IpaClasiffier ipaClasiffier = new IpaClasiffier();
-                DirectoParser parser = new DirectoParser();
-                //TENGO QUE HACER UNA METODO PARSE ARFF QUE ARME LA LISTA DE ATRIBUTOS.
-                //VOY A NECESITA UNA HASH CON LOS ROLES PERO CON EL NOMBRE COMO CLAVEEEEEEEEE, Y HACER TODO JUNTO EN ALGO CON EL ESTILO AGREGAR ATRIBUTOS
-               // parser.agregarAtributos(ipaClasiffier.parseConductaDirecto(filePath), );
-
-
-            }
-        }*/
-        	model = modelPred;
-        	pathGrupo = "C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenGrupoDirecto.arff";
-        	//TODO sacar el path de grupos del organizador
-           Instances prediccionDirecta = predecir(filePath,
-                   Constants.PREDICTIONS_DIRECTO_FOLDER + String.valueOf(System.currentTimeMillis()) + "-" + model+ Constants.ARFF_FILE,
-                   "2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE, "2");
-           System.out.println(prediccionDirecta.toString());
-
+        OrganizadorPrediccion organizadorPrediccion = new OrganizadorPrediccion();
+		organizadorPrediccion.organizar_carpeta(Constants.TEMP_PRED_FOLDER_TO_ORG, Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff");
+        model = modelPred;
+        pathGrupo = "C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenGrupoDirecto.arff";
+    	//TODO sacar el path de grupos del organizador
+        Instances prediccionDirecta = predecir(Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff",
+               "1-3, 5-5", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE, "2");
+        System.out.println(prediccionDirecta.toString());
+        FileUtils.deleteDirectory(new File(Constants.TEMP_PRED_FOLDER_TO_ORG));
     }
 
     public Instances prepareArff(Instances arff, String attributesToRemove) throws Exception {

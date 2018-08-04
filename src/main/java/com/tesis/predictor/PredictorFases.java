@@ -3,7 +3,7 @@ package com.tesis.predictor;
 import com.tesis.commons.Constants;
 import org.apache.commons.io.FileUtils;
 import com.tesis.organizador.Organizador;
-import com.tesis.parser.FasesParser;
+import com.tesis.parser.entrenamiento.FasesParserEntrenamiento;
 
 import java.io.File;
 
@@ -16,7 +16,7 @@ public class PredictorFases {
             FileUtils.cleanDirectory(new File(Constants.FASES_LABELED_FOLDER + Constants.FASE_DOS_FOLDER));
             FileUtils.cleanDirectory(new File(Constants.FASES_LABELED_FOLDER + Constants.FASE_TRES_FOLDER));
             //Lee el json y divide las conversaciones dejando los resultados en "results\labeled\Directo"
-            FasesParser parser = new FasesParser();
+            FasesParserEntrenamiento parser = new FasesParserEntrenamiento();
             parser.parseJson(filePath);
             Organizador organizador = new Organizador();
             organizador.orgainzar_carpeta(Constants.FASES_LABELED_FOLDER + Constants.FASE_DOS_FOLDER, "./ResumenFase2.arff");
@@ -24,7 +24,7 @@ public class PredictorFases {
         }
 
         PredictorFase2 predictorFase2 = new PredictorFase2();
-        FaseResultados fase2Results = predictorFase2.predecirFase2(filePath, modelFase2);
+        FaseResultados fase2Results = predictorFase2.predecirFase2(filePath, modelFase2, false);
         PredictorFase3 predictorFase3 = new PredictorFase3();
         //TODO agarrar la instancia directamente
         FaseResultados fase3Results = predictorFase3.predecirFase3(fase2Results.getPath(), modelFase3);
