@@ -10,15 +10,12 @@ import weka.core.converters.ConverterUtils;
 
 public abstract class Predictor extends PredictorAbstracto{
 
-	protected String pathGrupo;
 	protected String model;
 
     public Instances predecir(String unlabeledFilePath, String attributesToRemove, String pathModel, String posNombre) throws Exception {
-    	//TODO una carpeta modelos y despues que se divida en directos y en fases.
+
         Instances unlabeled = Weka.loadDataset(unlabeledFilePath);
-
         unlabeled = prepareArff(unlabeled, attributesToRemove);
-
         //Classifier cls = wekaRoles.loadModel("results\\procesamientoDirecto\\modelos\\" + namesClasificadores[j] + "-directo.dat");
         Classifier cls = wekaRoles.loadModel(pathModel);
         // set class attribute

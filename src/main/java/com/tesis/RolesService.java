@@ -1,5 +1,6 @@
 package com.tesis;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
@@ -8,10 +9,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 
 import com.tesis.commons.Constants;
 import com.tesis.commons.IpaClasiffier;
+import com.tesis.commons.JsonUtil;
 import com.tesis.organizador.OrganizadorPrediccion;
 import com.tesis.parser.prediccion.ParserPrediccionDirecto;
 import com.tesis.predictor.PredictorDirecto;
@@ -49,33 +52,12 @@ public class RolesService {
 	
 	@GET
 	@Path("/predecirDirecto")
-	public String predecirDirecto() throws Exception {
-		//TODO tener un path temporal con el archivo y despues borrarlo (cuando mandan una sola conversacion, sino recibis el archivo completo)
-		
-		String[] namesClasificadores = {"J48"};
-		String prediccion="";
+	public String predecirDirecto(@QueryParam("conversation") String conversation, @QueryParam("model") String model) throws Exception {
         PredictorDirecto predictorDirecto = new PredictorDirecto();
-        for (int j = 0; j < namesClasificadores.length; j++) {
-            predictorDirecto.predecirDirecto("C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenDirecto.arff", namesClasificadores[j], false);
-        }
-		
-		return "Predijo directo";
+        String prediccion =  predictorDirecto.predecirDirecto(conversation, model, false);
+		return prediccion;
 	}
 	
-	@GET
-	@Path("/predecirDirectoGrupo")
-	public String predecirDirectoGrupo() throws Exception {
-		//TODO tener un path temporal con el archivo y despues borrarlo (cuando mandan una sola conversacion, sino recibis el archivo completo)
-		
-		String[] namesClasificadores = {"J48"};
-		String prediccion="";
-        PredictorDirectoGrupo predictorDirectoGrupo = new PredictorDirectoGrupo();
-        for (int j = 0; j < namesClasificadores.length; j++) {
-        	predictorDirectoGrupo.predecirDirectoGrupo("C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenGrupoDirecto.arff", namesClasificadores[j]);
-        }
-		
-		return "Predijo directo grupo";
-	}
 	
 	@GET
 	@Path("/predecirFase2")

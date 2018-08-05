@@ -21,7 +21,6 @@ public abstract class PredictorGrupo extends PredictorAbstracto{
         Classifier cls = wekaRoles.loadModel(pathModel);
         // set class attribute
         unlabeled.setClassIndex(0);
-        //TODO por parametro !!!!
         labeled.setClassIndex(indiceAttPred);
         
         unlabeled = WekaRoles.removeAttributes(unlabeled, posNombre);
@@ -33,8 +32,6 @@ public abstract class PredictorGrupo extends PredictorAbstracto{
             labeled.instance(i).setClassValue(clsLabel);
         }
 
-        // Save newly labeled data
-       // ConverterUtils.DataSink.write(labeledFilePath, labeled);
         return labeled;
 
     }

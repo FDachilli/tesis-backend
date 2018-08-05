@@ -21,44 +21,12 @@ import weka.core.Instances;
 
 public class PredictorDirectoGrupo extends PredictorGrupo {
 	
-	 public void predecirDirectoGrupo (String filePath, String model) throws Exception {
-
-	        if (filePath.contains(Constants.JSON_FILE)) {
-	            //Limpio directorio para despues no procesar archivos viejos
-	            FileUtils.cleanDirectory(new File(Constants.DIRECTO_LABELED_FOLDER));
-	            //Lee el json y divide las conversaciones dejando los resultados en "results\labeled\Directo"
-	            GrupoDirectoParserEntrenamiento parser = new GrupoDirectoParserEntrenamiento();
-	            parser.parseJson(filePath);
-	            Organizador organizador = new Organizador();
-	            organizador.orgainzar_carpeta(Constants.DIRECTO_LABELED_FOLDER, "./ResumenDirecto.arff");
-	        }
-	       /* else{
-	            if (filePath.contains(Constants.ARFF_FILE)) {
-	                IpaClasiffier ipaClasiffier = new IpaClasiffier();
-	                DirectoParser parser = new DirectoParser();
-	                //TENGO QUE HACER UNA METODO PARSE ARFF QUE ARME LA LISTA DE ATRIBUTOS.
-	                //VOY A NECESITA UNA HASH CON LOS ROLES PERO CON EL NOMBRE COMO CLAVEEEEEEEEE, Y HACER TODO JUNTO EN ALGO CON EL ESTILO AGREGAR ATRIBUTOS
-	               // parser.agregarAtributos(ipaClasiffier.parseConductaDirecto(filePath), );
-
-
-	            }
-	        }*/
-
-
-	          /* Instances prediccionGrupo = predecir(filePath,
-	                   Constants.PREDICTIONS_DIRECTO_FOLDER + String.valueOf(System.currentTimeMillis()) + "-" + model+ Constants.ARFF_FILE,
-	                   "2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE,
-	                   "2");
-	           System.out.println(prediccionGrupo.toString());*/
-
-	    }
-
 	@Override
 	public Instances prepareArff(Instances arff, String attributesToRemove) throws Exception {
      
         arff = WekaRoles.removeAttributes(arff, attributesToRemove);
 
-        ArrayList<Attribute> attributes = new ArrayList<>();
+        /*ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(WekaRoles.classRolAttribute());
         attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
 
@@ -80,14 +48,15 @@ public class PredictorDirectoGrupo extends PredictorGrupo {
         
         attributes.addAll(WekaRoles.getSymlogAttributes());
 
-        attributes.add(new Attribute("cant_mensajes"));
+        attributes.add(new Attribute("cant_mensajes"));*/
 
         Instances sentencesDataset = new Instances(arff, 0);
+        sentencesDataset.insertAttributeAt(WekaRoles.classRolAttribute(), 0);
 
         for (int i = 0; i < arff.numInstances(); i++) {
 
             Instance instance = arff.instance(i);
-            int instanceIndex = 1;
+            int instanceIndex = 0;
             String rol = "?";
 
             String nombre = instance.stringValue(instanceIndex++);

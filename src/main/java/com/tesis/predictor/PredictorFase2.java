@@ -20,7 +20,6 @@ public class PredictorFase2 extends Predictor{
     public FaseResultados predecirFase2 (String filePath, String modelPred, boolean total) throws Exception {
 
     		model = modelPred;
-    		pathGrupo = "C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenGrupoFase2.arff";
             FaseResultados results = new FaseResultados();
             String resultPath = Constants.FASES_FOLDER + Constants.FASE_DOS_FOLDER + Constants.PREDICTIONS_FOLDER +  String.valueOf(System.currentTimeMillis()) + "-" + model + Constants.ARFF_FILE;
             results.setPath(resultPath);
@@ -156,7 +155,7 @@ public class PredictorFase2 extends Predictor{
         }
         
         PredictorFase2Grupo predictorFase2Grupo = new PredictorFase2Grupo();
-        predictorFase2Grupo.predecir(pathGrupo, attributesToRemove, "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "2");
+        //predictorFase2Grupo.predecir(pathGrupo, attributesToRemove, "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "2");
         
         return sentencesDataset;
     }

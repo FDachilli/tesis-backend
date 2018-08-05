@@ -1,5 +1,6 @@
 package com.tesis.commons;
 
+import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.poi.ss.usermodel.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,13 +74,17 @@ public class Util {
             return str;
         }
         
-        public void deleteFolder(String path) {
-        	File index = new File("/home/Work/Indexer1");
-        	String[]entries = index.list();
-        	for(String s: entries){
-        	    File currentFile = new File(index.getPath(),s);
-        	    currentFile.delete();
-        	}
-        	index.delete();
+        public static void deleteFolder(String path) throws IOException {
+        	File fin = new File(path);
+        	for (File file : fin.listFiles()) {
+        		System.gc();
+                try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	    FileDeleteStrategy.FORCE.delete(file);
+        	}   
         }
 }
