@@ -17,59 +17,29 @@ import java.util.ArrayList;
 public class PredictorFase2 extends Predictor{
 
 
-    public FaseResultados predecirFase2 (String filePath, String modelPred, boolean total) throws Exception {
+    public Instances predecirFase2 (String filePath, String modelPred) throws Exception {
 
     		model = modelPred;
-            FaseResultados results = new FaseResultados();
-            String resultPath = Constants.FASES_FOLDER + Constants.FASE_DOS_FOLDER + Constants.PREDICTIONS_FOLDER +  String.valueOf(System.currentTimeMillis()) + "-" + model + Constants.ARFF_FILE;
-            results.setPath(resultPath);
-            results.setLabeledInstances(predecir(filePath
-                    ,"2-4, 6-6", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2\\" + model + Constants.DAT_FILE, "2").toString());
-            return results;
+            return predecir(filePath
+                    ,"1-3, 5-5", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2\\" + model + Constants.DAT_FILE, "2");
+            
     }
 
     public Instances prepareArff(Instances arff, String attributesToRemove) throws Exception {
-        //TODO ver despues cuando no vengan los arff armados. Vamos a tener que leer los atributos y armar el arff
 
         arff = WekaRoles.removeAttributes(arff, attributesToRemove);
 
-        ArrayList<Attribute> attributes = new ArrayList<>();
-        attributes.add(WekaRoles.classTipoRolAttribute());
-        attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
-        attributes.add(WekaRoles.classTipoRolCompanerosAttribute());
-
-        //TODO obtenerlos de Weka roles 
-        for (int i=1; i<=12; i++){
-            attributes.add(new Attribute("C"+i));
-        }
-
-        for (int i = 1; i<=4; i++){
-            attributes.add(new Attribute("R"+i));
-        }
-
-        for (int i = 1; i<=2; i++){
-            attributes.add(new Attribute("A"+i));
-        }
-
-        for (int i = 1; i<=3; i++){
-            attributes.add(new Attribute("Horario"+i));
-        }
-        
-        attributes.addAll(WekaRoles.getSymlogAttributes());
-
-        attributes.add(new Attribute("cant_mensajes"));
-
         Instances sentencesDataset = new Instances(arff, 0);
+        sentencesDataset.insertAttributeAt(WekaRoles.classTipoRolAttribute(), 0);
+        sentencesDataset.insertAttributeAt(WekaRoles.classTipoRolCompanerosAttribute(), 2);
 
         for (int i = 0; i < arff.numInstances(); i++) {
 
             Instance instance = arff.instance(i);
-            int instanceIndex = 1;
+            int instanceIndex = 0;
             String tipo_rol = "?";
-
             String nombre = instance.stringValue(instanceIndex++);
             String tipo_rol_comp = "?";
-            instanceIndex++;
             Double C1 = instance.value(instanceIndex++);
             Double C2 = instance.value(instanceIndex++);
             Double C3 = instance.value(instanceIndex++);
@@ -155,9 +125,9 @@ public class PredictorFase2 extends Predictor{
         }
         
         PredictorFase2Grupo predictorFase2Grupo = new PredictorFase2Grupo();
-        //predictorFase2Grupo.predecir(pathGrupo, attributesToRemove, "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "2");
-        
-        return sentencesDataset;
+        String fase2TempPath = Constants.TEMP_PRED_FOLDER_TO_ORG + "fase2Grupo" + Constants.ARFF_FILE;
+        Instances fase2GrupoResult = predictorFase2Grupo.predecir(Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff", "1-3, 5-5", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "2", fase2TempPath);
+        return fase2GrupoResult;
     }
 
 

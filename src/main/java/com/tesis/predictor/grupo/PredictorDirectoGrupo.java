@@ -26,30 +26,6 @@ public class PredictorDirectoGrupo extends PredictorGrupo {
      
         arff = WekaRoles.removeAttributes(arff, attributesToRemove);
 
-        /*ArrayList<Attribute> attributes = new ArrayList<>();
-        attributes.add(WekaRoles.classRolAttribute());
-        attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
-
-        for (int i=1; i<=12; i++){
-            attributes.add(new Attribute("C"+i));
-        }
-
-        for (int i = 1; i<=4; i++){
-            attributes.add(new Attribute("R"+i));
-        }
-
-        for (int i = 1; i<=2; i++){
-            attributes.add(new Attribute("A"+i));
-        }
-
-        for (int i = 1; i<=3; i++){
-            attributes.add(new Attribute("Horario"+i));
-        }
-        
-        attributes.addAll(WekaRoles.getSymlogAttributes());
-
-        attributes.add(new Attribute("cant_mensajes"));*/
-
         Instances sentencesDataset = new Instances(arff, 0);
         sentencesDataset.insertAttributeAt(WekaRoles.classRolAttribute(), 0);
 

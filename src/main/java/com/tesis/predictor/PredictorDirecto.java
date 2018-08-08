@@ -3,33 +3,23 @@ package com.tesis.predictor;
 import com.tesis.commons.Constants;
 import com.tesis.commons.Util;
 
-import org.apache.commons.io.FileUtils;
-import org.weka.Weka;
-import com.tesis.organizador.Organizador;
 import com.tesis.organizador.OrganizadorPrediccion;
-import com.tesis.parser.entrenamiento.DirectoParserEntrenamiento;
-import com.tesis.parser.prediccion.ParserPrediccionDirecto;
+import com.tesis.parser.prediccion.ParserPrediccion;
 import com.tesis.predictor.grupo.PredictorDirectoGrupo;
 import com.tesis.weka.WekaRoles;
 
-import weka.classifiers.Classifier;
-import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.Utils;
-
-import java.io.File;
-import java.util.ArrayList;
 
 public class PredictorDirecto extends Predictor{
 
     public String predecirDirecto (String file, String modelPred, boolean total) throws Exception {
-    	ParserPrediccionDirecto parserPrediccionDirecto = new ParserPrediccionDirecto();
+    	ParserPrediccion parserPrediccion = new ParserPrediccion();
         if (!total) {
-    		parserPrediccionDirecto.parseJsonParcial(file);
+    		parserPrediccion.parseJsonParcial(file);
         }else {
-        	parserPrediccionDirecto.parseJsonTotal(file);
+        	parserPrediccion.parseJsonTotal(file);
         }
         OrganizadorPrediccion organizadorPrediccion = new OrganizadorPrediccion();
 		organizadorPrediccion.organizar_carpeta(Constants.TEMP_PRED_FOLDER_TO_ORG, Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff");
@@ -142,7 +132,7 @@ public class PredictorDirecto extends Predictor{
         
         PredictorDirectoGrupo predictorDirectoGrupo = new PredictorDirectoGrupo();
         return predictorDirectoGrupo.predecir(Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff", "1-3, 5-5",
-        		"C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "3");
+        		"C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "3", null);
     }
 
 

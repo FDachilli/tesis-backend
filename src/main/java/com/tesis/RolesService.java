@@ -16,7 +16,7 @@ import com.tesis.commons.Constants;
 import com.tesis.commons.IpaClasiffier;
 import com.tesis.commons.JsonUtil;
 import com.tesis.organizador.OrganizadorPrediccion;
-import com.tesis.parser.prediccion.ParserPrediccionDirecto;
+import com.tesis.parser.prediccion.ParserPrediccion;
 import com.tesis.predictor.PredictorDirecto;
 import com.tesis.predictor.PredictorFase2;
 import com.tesis.predictor.PredictorFase3;
@@ -43,7 +43,7 @@ public class RolesService {
 	@GET
 	@Path("/mensajeHola")
 	public String sayHello1(@QueryParam("foo") String foo) throws ParseException, IOException {
-		ParserPrediccionDirecto parserPrediccionDirecto = new ParserPrediccionDirecto();
+		ParserPrediccion parserPrediccionDirecto = new ParserPrediccion();
 		parserPrediccionDirecto.parseJsonParcial(foo);
 		OrganizadorPrediccion organizadorPrediccion = new OrganizadorPrediccion();
 		organizadorPrediccion.organizar_carpeta(Constants.TEMP_PRED_FOLDER_TO_ORG, Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff");
@@ -55,6 +55,14 @@ public class RolesService {
 	public String predecirDirecto(@QueryParam("conversation") String conversation, @QueryParam("model") String model) throws Exception {
         PredictorDirecto predictorDirecto = new PredictorDirecto();
         String prediccion =  predictorDirecto.predecirDirecto(conversation, model, false);
+		return prediccion;
+	}
+	
+	@GET
+	@Path("/predecirDirectoTotal")
+	public String predecirDirectoTotal(@QueryParam("conversation") String conversation, @QueryParam("model") String model) throws Exception {
+        PredictorDirecto predictorDirecto = new PredictorDirecto();
+        String prediccion =  predictorDirecto.predecirDirecto(conversation, model, true);
 		return prediccion;
 	}
 	
@@ -76,17 +84,12 @@ public class RolesService {
 	
 	@GET
 	@Path("/predecirFases")
-	public String predecirFases() throws Exception {
-		//TODO tener un path temporal con el archivo y despues borrarlo (cuando mandan una sola conversacion, sino recibis el archivo completo)
-		
-		String[] namesClasificadores = {"J48"};
-		String prediccion="";
-        PredictorFases predictorDirectoGrupo = new PredictorFases();
-        for (int j = 0; j < namesClasificadores.length; j++) {
-        	predictorDirectoGrupo.predecirFases("C:\\Users\\franc\\Dropbox\\tesis-backend\\ResumenFase2.arff", namesClasificadores[j], namesClasificadores[j]);
-        }
-		
-		return "Predijo fase 3";
+	public String predecirFases(@QueryParam("conversation") String conversation, @QueryParam("models") String models) throws Exception {
+	
+		String model2 = JsonUtil.getStringValue(models, "model2");
+		String model3 = JsonUtil.getStringValue(models, "model3");
+        PredictorFases predictorFases = new PredictorFases();
+		return predictorFases.predecirFases(conversation, model2, model3, false);
 	}
 	
 }

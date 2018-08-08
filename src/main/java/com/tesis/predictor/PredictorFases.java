@@ -1,34 +1,30 @@
 package com.tesis.predictor;
 
 import com.tesis.commons.Constants;
-import org.apache.commons.io.FileUtils;
-import com.tesis.organizador.Organizador;
-import com.tesis.parser.entrenamiento.FasesParserEntrenamiento;
+import com.tesis.commons.Util;
+import com.tesis.organizador.OrganizadorPrediccion;
+import com.tesis.parser.prediccion.ParserPrediccion;
 
-import java.io.File;
+import weka.core.Instances;
 
 public class PredictorFases {
 
-    public void predecirFases (String filePath, String modelFase2, String modelFase3) throws Exception {
-
-        if (filePath.contains(Constants.JSON_FILE)) {
-            //Limpio directorio para despues no procesar archivos viejos
-            FileUtils.cleanDirectory(new File(Constants.FASES_LABELED_FOLDER + Constants.FASE_DOS_FOLDER));
-            FileUtils.cleanDirectory(new File(Constants.FASES_LABELED_FOLDER + Constants.FASE_TRES_FOLDER));
-            //Lee el json y divide las conversaciones dejando los resultados en "results\labeled\Directo"
-            FasesParserEntrenamiento parser = new FasesParserEntrenamiento();
-            parser.parseJson(filePath);
-            Organizador organizador = new Organizador();
-            organizador.orgainzar_carpeta(Constants.FASES_LABELED_FOLDER + Constants.FASE_DOS_FOLDER, "./ResumenFase2.arff");
-            //organizador.orgainzar_carpeta(Constants.FASES_LABELED_FOLDER + Constants.FASE_DOS_FOLDER, "./ResumenFase3.arff");
+    public String predecirFases (String file, String modelFase2, String modelFase3, boolean total) throws Exception {
+    	ParserPrediccion parserPrediccion = new ParserPrediccion();
+        if (!total) {
+    		parserPrediccion.parseJsonParcial(file);
+        }else {
+        	parserPrediccion.parseJsonTotal(file);
         }
-
+        OrganizadorPrediccion organizadorPrediccion = new OrganizadorPrediccion();
+		organizadorPrediccion.organizar_carpeta(Constants.TEMP_PRED_FOLDER_TO_ORG, Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff");
         PredictorFase2 predictorFase2 = new PredictorFase2();
-        FaseResultados fase2Results = predictorFase2.predecirFase2(filePath, modelFase2, false);
+        Instances fase2Results = predictorFase2.predecirFase2(Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff", modelFase2);
         PredictorFase3 predictorFase3 = new PredictorFase3();
-        //TODO agarrar la instancia directamente
-        FaseResultados fase3Results = predictorFase3.predecirFase3(fase2Results.getPath(), modelFase3);
-        System.out.println (fase3Results.getLabeledInstances());
+        Instances fase3Results = predictorFase3.predecirFase3(fase2Results, modelFase3);
+        System.out.println (fase3Results.toString());
+        Util.deleteFolder(Constants.USR_TEMP_FOLDER);
+        return fase3Results.toString();
     }
 
 }

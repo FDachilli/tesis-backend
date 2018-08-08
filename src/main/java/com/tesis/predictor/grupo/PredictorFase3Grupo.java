@@ -15,41 +15,19 @@ public class PredictorFase3Grupo extends PredictorGrupo{
 
 	@Override
 	public Instances prepareArff(Instances arff, String attributesToRemove) throws Exception {
-		arff = WekaRoles.removeAttributes(arff, attributesToRemove);
-
-        ArrayList<Attribute> attributes = new ArrayList<>();
-        attributes.add(WekaRoles.classTipoRolAttribute());
-        attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
-
-        for (int i=1; i<=12; i++){
-            attributes.add(new Attribute("C"+i));
-        }
-
-        for (int i = 1; i<=4; i++){
-            attributes.add(new Attribute("R"+i));
-        }
-
-        for (int i = 1; i<=2; i++){
-            attributes.add(new Attribute("A"+i));
-        }
-
-        for (int i = 1; i<=3; i++){
-            attributes.add(new Attribute("Horario"+i));
-        }
-        
-        attributes.addAll(WekaRoles.getSymlogAttributes());
-
-        attributes.add(new Attribute("cant_mensajes"));
+		if (!attributesToRemove.isEmpty())
+            arff = WekaRoles.removeAttributes(arff, attributesToRemove);
 
         Instances sentencesDataset = new Instances(arff, 0);
+        sentencesDataset.insertAttributeAt(WekaRoles.classRolAttribute(), 0);
 
         for (int i = 0; i < arff.numInstances(); i++) {
 
             Instance instance = arff.instance(i);
-            int instanceIndex = 1;
+            int instanceIndex = 0;
             String rol = "?";
             String tipo_rol = instance.stringValue(instanceIndex++);
-            String nombre = instance.stringValue(instanceIndex++);
+            //String nombre = instance.stringValue(instanceIndex++);
   
             Double C1 = instance.value(instanceIndex++);
             Double C2 = instance.value(instanceIndex++);
@@ -90,7 +68,7 @@ public class PredictorFase3Grupo extends PredictorGrupo{
             double[] values = new double[sentencesDataset.numAttributes()];
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(rol);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol);
-            values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);    
+            //values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);    
 
             values[valuesIndex++] = C1;
             values[valuesIndex++] = C2;

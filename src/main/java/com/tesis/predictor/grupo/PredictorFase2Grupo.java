@@ -18,36 +18,13 @@ public class PredictorFase2Grupo extends PredictorGrupo {
 	public Instances prepareArff(Instances arff, String attributesToRemove) throws Exception {
 		arff = WekaRoles.removeAttributes(arff, attributesToRemove);
 
-        ArrayList<Attribute> attributes = new ArrayList<>();
-        attributes.add(WekaRoles.classTipoRolAttribute());
-        attributes.add(new Attribute(Weka.NOMBRE, (ArrayList<String>) null));
-
-        for (int i=1; i<=12; i++){
-            attributes.add(new Attribute("C"+i));
-        }
-
-        for (int i = 1; i<=4; i++){
-            attributes.add(new Attribute("R"+i));
-        }
-
-        for (int i = 1; i<=2; i++){
-            attributes.add(new Attribute("A"+i));
-        }
-
-        for (int i = 1; i<=3; i++){
-            attributes.add(new Attribute("Horario"+i));
-        }
-        
-        attributes.addAll(WekaRoles.getSymlogAttributes());
-
-        attributes.add(new Attribute("cant_mensajes"));
-
         Instances sentencesDataset = new Instances(arff, 0);
-
+        sentencesDataset.insertAttributeAt(WekaRoles.classTipoRolAttribute(), 0);
+        
         for (int i = 0; i < arff.numInstances(); i++) {
 
             Instance instance = arff.instance(i);
-            int instanceIndex = 1;
+            int instanceIndex = 0;
             String tipo_rol = "?";
 
             String nombre = instance.stringValue(instanceIndex++);
