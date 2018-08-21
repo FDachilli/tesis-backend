@@ -71,8 +71,17 @@ public class RolesGrupos {
 					termino = true;
 				}
 			}
-			Grupo grupo = new Grupo(integrantes, rolesFaltantes, rolesFaltantes.isEmpty());
-			grupos.add(grupo);
+			if (integrantes.size() == 1) {
+				for(Grupo grupo: grupos) {
+					if (grupo.getIntegrantes().size()< size) {
+						grupo.getIntegrantes().add(integrantes.get(0));
+					}
+				}
+			}else {
+				Grupo grupo = new Grupo(integrantes, rolesFaltantes, rolesFaltantes.isEmpty());
+				grupos.add(grupo);
+			}
+			
 		}
 		return grupos;
 	}
