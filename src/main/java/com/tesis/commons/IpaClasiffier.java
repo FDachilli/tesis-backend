@@ -21,7 +21,7 @@ public class IpaClasiffier {
         Weka weka = new WekaSMO(10, 1, 3);
         ProcessDataset process = new DirectProcessing(weka, true, true);
         //TODO path como properties o constant
-        return process.classify(file, "", "C:\\Users\\franc\\Dropbox\\tesis-backend\\");
+        return process.classify(file, "");
 
     }
 

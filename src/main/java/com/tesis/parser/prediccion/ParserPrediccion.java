@@ -37,9 +37,8 @@ import com.tesis.hangouts.ParticipantData;
 
 public class ParserPrediccion {
 	
-	private static FreelingAnalyzer freelingAnalyzer = FreelingAnalyzer.getInstance("C:\\Users\\franc\\Dropbox\\tesis-backend\\");
+	private static FreelingAnalyzer freelingAnalyzer = FreelingAnalyzer.getInstance();
 	
-	//TODO en comun con el comun
    private String getARFFHeader() {
         String header;
 

@@ -1,20 +1,8 @@
 package com.tesis.predictor.grupo;
 
-import java.io.File;
-import java.util.ArrayList;
 
-import org.apache.commons.io.FileUtils;
-import org.weka.Weka;
-
-import com.tesis.commons.Constants;
-import com.tesis.organizador.Organizador;
-import com.tesis.parser.entrenamiento.DirectoParserEntrenamiento;
-import com.tesis.parser.entrenamiento.GrupoDirectoParserEntrenamiento;
-import com.tesis.predictor.Predictor;
 import com.tesis.weka.WekaRoles;
 
-import weka.classifiers.Classifier;
-import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;

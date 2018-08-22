@@ -1,13 +1,8 @@
 package com.tesis.predictor.grupo;
 
-import java.util.ArrayList;
 
-import org.weka.Weka;
-
-import com.tesis.predictor.PredictorAbstracto;
 import com.tesis.weka.WekaRoles;
 
-import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;

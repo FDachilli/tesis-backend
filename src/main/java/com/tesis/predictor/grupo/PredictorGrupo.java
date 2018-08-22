@@ -6,9 +6,7 @@ import com.tesis.predictor.PredictorAbstracto;
 import com.tesis.weka.WekaRoles;
 
 import weka.classifiers.Classifier;
-import weka.core.Attribute;
 import weka.core.Instances;
-import weka.core.converters.ConverterUtils;
 
 public abstract class PredictorGrupo extends PredictorAbstracto{
 	
