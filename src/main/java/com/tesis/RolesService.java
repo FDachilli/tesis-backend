@@ -31,58 +31,7 @@ import com.tesis.predictor.grupo.PredictorDirectoGrupo;
 
 @Path("roles")
 public class RolesService {
-	
-	@GET
-	@Path("/mensaje")
-	public String sayHello() {
-		IpaClasiffier ipaClassifier = new IpaClasiffier();
-		try {
-			return ipaClassifier.parseConductaDirecto("C:\\Users\\franc\\Dropbox\\tesis-backend\\prueba.arff");
-		} catch (FileNotFoundException | JSONException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "Error al clasificar";
-	}
-
-	
-	@GET
-	@Path("/mensajeHola")
-	public String sayHello1() throws ParseException, IOException {
-		 List<String> participantes = new ArrayList<String>() {{
-		    add("coordinador");
-		    add("implementador");
-		    add("cerebro");
-		    add("colaborador");
-		    add("finalizador");
-		    add("investigador");
-		    add("monitor");
-		    add("especialista");
-		    add("impulsor");
-		    add("coordinador");
-		    add("implementador");
-		    add("cerebro");
-		    add("colaborador");
-		    add("finalizador");
-		    add("investigador");
-		    add("monitor");
-		    add("especialista");
-		    add("impulsor");
-		    add("coordinador");
-		    add("investigador");
-		    add("monitor");
-		    add("especialista");
-		    add("impulsor");
-		    add("coordinador");
-		    add("implementador");
-		}};
 		
-		RolesGrupos rolesGrupos = new RolesGrupos();
-	//	rolesGrupos.armarGrupo(participantes, 3);
-		
-		return "Anda el servicio maven, y sigue andando";
-	}
-	
 	@GET
 	@Path("/predecirDirecto")
 	public String predecirDirecto(@QueryParam("conversation") String conversation, @QueryParam("model") String model) throws Exception {

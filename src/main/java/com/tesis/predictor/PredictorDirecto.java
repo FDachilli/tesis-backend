@@ -25,7 +25,7 @@ public class PredictorDirecto extends Predictor{
 		organizadorPrediccion.organizar_carpeta(Constants.TEMP_PRED_FOLDER_TO_ORG, Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff");
         model = modelPred;
         Instances prediccionDirecta = predecir(Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff",
-               "1-3, 5-5", "C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE, "2");
+               "1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE, "2");
         System.out.println(prediccionDirecta.toString());
         Util.deleteFolder(Constants.USR_TEMP_FOLDER);
         return prediccionDirecta.toString();
@@ -132,7 +132,7 @@ public class PredictorDirecto extends Predictor{
         
         PredictorDirectoGrupo predictorDirectoGrupo = new PredictorDirectoGrupo();
         return predictorDirectoGrupo.predecir(Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff", "1-3, 5-5",
-        		"C:\\Users\\franc\\Dropbox\\tesis-backend\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "3", null);
+        		System.getProperty("user.dir") + "\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "3", null);
     }
 
 
