@@ -9,12 +9,12 @@ import weka.core.Instances;
 
 public class PredictorFases {
 
-    public String predecirFases (String file, String modelFase2, String modelFase3, boolean total) throws Exception {
+    public String predecirFases (String file, String modelFase1, String modelFase2, String modelFase3, boolean total) throws Exception {
     	ParserPrediccion parserPrediccion = new ParserPrediccion();
         if (!total) {
-    		parserPrediccion.parseJsonParcial(file);
+    		parserPrediccion.parseJsonParcial(file, modelFase1);
         }else {
-        	parserPrediccion.parseJsonTotal(file);
+        	parserPrediccion.parseJsonTotal(file, modelFase1);
         }
         OrganizadorPrediccion organizadorPrediccion = new OrganizadorPrediccion();
 		organizadorPrediccion.organizar_carpeta(Constants.TEMP_PRED_FOLDER_TO_ORG, Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff");

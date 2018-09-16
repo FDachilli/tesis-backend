@@ -1,6 +1,5 @@
 package com.tesis.commons;
 
-
 import org.ipa.GroupAnalysisResult;
 import org.ipa.GroupAnalysisRow;
 import org.ipa.IpaAnalysis;
@@ -16,22 +15,43 @@ import java.util.List;
 
 public class IpaClasiffier {
 
-    public String parseConductaDirecto (String file) throws ParseException, FileNotFoundException, JSONException {
+    public String parseConductaDirecto (String file, String clas) throws ParseException, FileNotFoundException, JSONException {
 
-        Weka weka = new WekaSMO(10, 1, 3);
+    	Weka weka = getClassifier(clas);
         ProcessDataset process = new DirectProcessing(weka, true, true);
-        //TODO path como properties o constant
         return process.classify(file, "");
 
     }
 
 
-    public String parseConductaFases (String file) throws ParseException, FileNotFoundException, JSONException{
-        Weka weka = new WekaDecisionTable(10, 1, 3);
+    public String parseConductaFases (String file, String clas) throws ParseException, FileNotFoundException, JSONException{
+        Weka weka = getClassifier(clas);
         PhasesProcessingSingleClassifier process = new PhasesProcessingSingleClassifier(weka, true, true);
         return process.classify(file, "");
     }
     
+    public Weka getClassifier(String clas) {
+    	   switch (clas) {
+	           case "J48":
+	               return new WekaJ48(10, 1, 3);
+	           case "NaiveBayes":
+	               return new WekaNaiveBayes(10, 1, 3);
+	           case "SMO":
+	               return new WekaSMO(10, 1, 3);
+	           case "IBk":
+	               return new WekaIBk(10, 1, 3);
+	           case "KStar":
+	               return new WekaKStar(10, 1, 3);
+	           case "PART":
+	               return new WekaPART(10, 1, 3);
+	           case "JRip":
+	               return new WekaJRip(10, 1, 3);
+	           case "DecisionTable":
+	               return new WekaDecisionTable(10, 1, 3);
+	           default:
+	               return new WekaSMO(10, 1, 3);
+    	   }
+    }
     
     public List<String> getConflictos (String path){
     	//Solo se analiza de a un grupo

@@ -11,13 +11,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.servlet.jsp.jstl.core.Config;
 
 import com.tesis.commons.Constants;
 
-/**
- * Created by Joaking on 3/4/2018.
- */
 public class OrganizadorPrediccion {
 
     HashMap<String,Instance> integrantes = new HashMap<>();

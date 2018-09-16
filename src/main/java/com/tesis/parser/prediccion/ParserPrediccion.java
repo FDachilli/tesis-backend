@@ -52,7 +52,7 @@ public class ParserPrediccion {
         return header;
     }
 	
-	public void parseJsonTotal(String fileName) throws ParseException {
+	public void parseJsonTotal(String fileName, String model) throws ParseException {
 
     	ObjectMapper mapper = new ObjectMapper();
 		HangoutsJSON hangoutsJSON;
@@ -104,7 +104,7 @@ public class ParserPrediccion {
 				else
 				    newFileName	= Constants.TEMP_PRED_FOLDER_TO_ORG + conversationStateRoot.getConversationId().getId() + Constants.ARFF_FILE;
 				
-				saveRolArff(newFileName, fileContent, lista_atributos);
+				saveRolArff(newFileName, fileContent, lista_atributos, model);
 			}
 		} catch (IOException e) {
 			// TODO tratar excepcion
@@ -129,7 +129,7 @@ public class ParserPrediccion {
          }
 	}
 	
-	public void parseJsonParcial(String conversation) throws ParseException, IOException {
+	public void parseJsonParcial(String conversation, String model) throws ParseException, IOException {
 
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode messages = mapper.readTree(conversation);
@@ -150,16 +150,15 @@ public class ParserPrediccion {
 	    }
 		System.out.println(fileContent);
 		String newFileName = Constants.TEMP_PRED_FOLDER_TO_ORG + System.currentTimeMillis() + Constants.ARFF_FILE;		
-		saveRolArff(newFileName, fileContent, lista_atributos);
+		saveRolArff(newFileName, fileContent, lista_atributos, model);
 		
     }
 	
-	private void saveRolArff (String fileName, String fileContent, List<Atributos> lista_atributos) throws ParseException, IOException {
+	private void saveRolArff (String fileName, String fileContent, List<Atributos> lista_atributos, String model) throws ParseException, IOException {
         saveToFile(fileName, fileContent);
         System.out.println("Clasificando: " + fileName);
-        //TODO pasar el modelo
         IpaClasiffier ipaClasiffier = new IpaClasiffier();
-        String pathIpa = ipaClasiffier.parseConductaDirecto(fileName);
+        String pathIpa = ipaClasiffier.parseConductaDirecto(fileName, model);
         Weka.copyDataset(pathIpa, fileName);
         agregarAtributos (fileName, lista_atributos);
     }
