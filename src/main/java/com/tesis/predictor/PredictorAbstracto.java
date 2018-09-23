@@ -8,6 +8,6 @@ public abstract class PredictorAbstracto {
 	
 	 protected WekaRoles wekaRoles = new WekaRoles();
 	 
-	 public abstract Instances prepareArff(Instances arff, String attributesToRemove) throws Exception;
+	 public abstract Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception;
 
 }

@@ -10,7 +10,7 @@ import weka.core.Instances;
 public class PredictorFase2Grupo extends PredictorGrupo {
 
 	@Override
-	public Instances prepareArff(Instances arff, String attributesToRemove) throws Exception {
+	public Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception {
 		arff = WekaRoles.removeAttributes(arff, attributesToRemove);
 
         Instances sentencesDataset = new Instances(arff, 0);

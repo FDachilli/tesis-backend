@@ -14,7 +14,7 @@ public abstract class PredictorGrupo extends PredictorAbstracto{
     
         Instances unlabeled = Weka.loadDataset(unlabeledFilePath);
 
-        unlabeled = prepareArff(unlabeled, attributesToRemove);
+        unlabeled = prepareArff(unlabeled, attributesToRemove, null);
 
         Classifier cls = wekaRoles.loadModel(pathModel);
         // set class attribute
@@ -40,6 +40,6 @@ public abstract class PredictorGrupo extends PredictorAbstracto{
     }
 
 	@Override
-	public abstract Instances prepareArff(Instances arff, String attributesToRemove) throws Exception;
+	public abstract Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception;
 
 }

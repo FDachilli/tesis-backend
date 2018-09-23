@@ -86,5 +86,6 @@ public class Util {
 				}
         	    FileDeleteStrategy.FORCE.delete(file);
         	}   
+        	FileDeleteStrategy.FORCE.delete(fin);
         }
 }

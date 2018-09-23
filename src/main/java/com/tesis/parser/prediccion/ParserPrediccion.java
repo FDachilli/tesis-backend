@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.UUID;
 
 import com.tesis.commons.Constants;
 
@@ -52,10 +53,11 @@ public class ParserPrediccion {
         return header;
     }
 	
-	public void parseJsonTotal(String fileName, String model) throws ParseException {
+	public String parseJsonTotal(String fileName, String model) throws ParseException {
 
     	ObjectMapper mapper = new ObjectMapper();
 		HangoutsJSON hangoutsJSON;
+		String folderName = Constants.TEMP_PRED_FOLDER_TO_ORG + UUID.randomUUID().toString() + System.currentTimeMillis() + File.separator;
 		try {
 			hangoutsJSON = mapper.readValue(new File(fileName), HangoutsJSON.class);
 			
@@ -99,17 +101,18 @@ public class ParserPrediccion {
 				
 				String newFileName;
 				if (conversationStateRoot.getConversationState().getConversation().getName() != null) {
-				    newFileName = Constants.TEMP_PRED_FOLDER_TO_ORG + conversationStateRoot.getConversationState().getConversation().getName() + Constants.ARFF_FILE;
+				    newFileName = folderName + conversationStateRoot.getConversationState().getConversation().getName() + Constants.ARFF_FILE;
 				}
 				else
-				    newFileName	= Constants.TEMP_PRED_FOLDER_TO_ORG + conversationStateRoot.getConversationId().getId() + Constants.ARFF_FILE;
+				    newFileName	= folderName + conversationStateRoot.getConversationId().getId() + Constants.ARFF_FILE;
 				
-				saveRolArff(newFileName, fileContent, lista_atributos, model);
+				saveRolArff(folderName, newFileName, fileContent, lista_atributos, model);
 			}
 		} catch (IOException e) {
 			// TODO tratar excepcion
 			e.printStackTrace();
 		}
+		return folderName;
     }
 	
 	private String getStringFecha(Long timestamp) {
@@ -129,7 +132,7 @@ public class ParserPrediccion {
          }
 	}
 	
-	public void parseJsonParcial(String conversation, String model) throws ParseException, IOException {
+	public String parseJsonParcial(String conversation, String model) throws ParseException, IOException {
 
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode messages = mapper.readTree(conversation);
@@ -149,21 +152,23 @@ public class ParserPrediccion {
 			fileContent += "?,'" + message.get("sender").asText() + "','" + mensaje + "'" + '\n';
 	    }
 		System.out.println(fileContent);
-		String newFileName = Constants.TEMP_PRED_FOLDER_TO_ORG + System.currentTimeMillis() + Constants.ARFF_FILE;		
-		saveRolArff(newFileName, fileContent, lista_atributos, model);
 		
+		String folderName = Constants.TEMP_PRED_FOLDER_TO_ORG + UUID.randomUUID().toString() + System.currentTimeMillis() + File.separator;
+		String newFileName = folderName + System.currentTimeMillis() + Constants.ARFF_FILE;		
+		saveRolArff(folderName, newFileName, fileContent, lista_atributos, model);
+		return folderName;
     }
 	
-	private void saveRolArff (String fileName, String fileContent, List<Atributos> lista_atributos, String model) throws ParseException, IOException {
-        saveToFile(fileName, fileContent);
+	private void saveRolArff (String folderName, String fileName,String fileContent, List<Atributos> lista_atributos, String model) throws ParseException, IOException {
+        saveToFile(folderName, fileName, fileContent);
         System.out.println("Clasificando: " + fileName);
         IpaClasiffier ipaClasiffier = new IpaClasiffier();
         String pathIpa = ipaClasiffier.parseConductaDirecto(fileName, model);
         Weka.copyDataset(pathIpa, fileName);
-        agregarAtributos (fileName, lista_atributos);
+        agregarAtributos (folderName, fileName, lista_atributos);
     }
 	
-	public void agregarAtributos(String pathfile, List<Atributos> lista_atributos) throws IOException {
+	public void agregarAtributos(String folderName, String pathfile, List<Atributos> lista_atributos) throws IOException {
 
         Instances dataset = Weka.loadDataset(pathfile);
         ArrayList<Attribute> attributes = new ArrayList<>();
@@ -211,13 +216,13 @@ public class ParserPrediccion {
             sentencesDataset.add(newInstance);
 
         }
-        Weka.saveDataset(sentencesDataset, Constants.TEMP_PRED_FOLDER_TO_ORG + System.currentTimeMillis() + "-roles" + Constants.ARFF_FILE);
+        Weka.saveDataset(sentencesDataset, folderName + System.currentTimeMillis() + "-roles" + Constants.ARFF_FILE);
     }
 	
-	 protected void saveToFile(String fileName, String fileContent) {
+	 protected void saveToFile(String folderName, String fileName, String fileContent) {
 		 
-		 	File directory = new File(Constants.TEMP_PRED_FOLDER_TO_ORG);
-		 	if (! directory.exists()){
+		 	File directory = new File(folderName);
+		 	if (!directory.exists()){
 		 		directory.mkdirs();
 		    }
 		 

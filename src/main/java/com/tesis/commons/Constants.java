@@ -34,7 +34,7 @@ public class Constants {
     public static final String TEMP_FOLDER = "temp" + File.separator;
     public static final String USER_DIR = System.getProperty("user.dir");
     public static final String USR_TEMP_FOLDER = USER_DIR + File.separator + TEMP_FOLDER;
-    public static final String TEMP_PRED_FOLDER_TO_ORG = USR_TEMP_FOLDER + "organizar" + File.separator;
+    public static final String TEMP_PRED_FOLDER_TO_ORG = USR_TEMP_FOLDER + "organizar";
     public static final String ARFF_FILE = ".arff";
     public static final String JSON_FILE = ".json";
     public static final String XLSX_FILE = ".xlsx";

@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>clasificador-ipa</groupId>
 			<artifactId>clasificadorIpa</artifactId>
-			<version>2.2.0</version>
+			<version>3.0.0</version>
 		</dependency>
 		
 		<dependency>

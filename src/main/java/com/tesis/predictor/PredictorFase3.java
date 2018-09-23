@@ -16,16 +16,16 @@ import java.util.ArrayList;
 
 public class PredictorFase3 extends Predictor{
 
-    public Instances predecirFase3 (Instances resultFase2, String modelPred) throws Exception {
+    public Instances predecirFase3 (Instances resultFase2, String modelPred, String folderName) throws Exception {
 
     	model = modelPred;
-    	String fase2TempPath = Constants.TEMP_PRED_FOLDER_TO_ORG + "fase2" + Constants.ARFF_FILE;
+    	String fase2TempPath = folderName + "fase2" + Constants.ARFF_FILE;
     	Weka.saveDataset(resultFase2, fase2TempPath);
         return predecir(fase2TempPath
-                ,"", System.getProperty("user.dir") + "\\modelos\\procesamientoFase3\\" + model + Constants.DAT_FILE, "3");
+                ,"", System.getProperty("user.dir") + "\\modelos\\procesamientoFase3\\" + model + Constants.DAT_FILE, "3", folderName);
     }
 
-    public Instances prepareArff(Instances arff, String attributesToRemove) throws Exception {
+    public Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception {
 
         if (!attributesToRemove.isEmpty())
             arff = WekaRoles.removeAttributes(arff, attributesToRemove);
@@ -132,7 +132,7 @@ public class PredictorFase3 extends Predictor{
         }
         
         PredictorFase3Grupo predictorFase3Grupo = new PredictorFase3Grupo();
-        return predictorFase3Grupo.predecir(Constants.TEMP_PRED_FOLDER_TO_ORG + "fase2Grupo" + Constants.ARFF_FILE, "", System.getProperty("user.dir") + "\\modelos\\procesamientoFase3Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 4, null, null);
+        return predictorFase3Grupo.predecir(folderName + "fase2Grupo" + Constants.ARFF_FILE, "", System.getProperty("user.dir") + "\\modelos\\procesamientoFase3Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 4, null, null);
     }
 
 }

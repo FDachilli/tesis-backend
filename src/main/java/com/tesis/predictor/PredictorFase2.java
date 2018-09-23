@@ -17,15 +17,15 @@ import java.util.ArrayList;
 public class PredictorFase2 extends Predictor{
 
 
-    public Instances predecirFase2 (String filePath, String modelPred) throws Exception {
+    public Instances predecirFase2 (String filePath, String modelPred, String folderName) throws Exception {
 
     		model = modelPred;
             return predecir(filePath
-                    ,"1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoFase2\\" + model + Constants.DAT_FILE, "2");
+                    ,"1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoFase2\\" + model + Constants.DAT_FILE, "2", folderName);
             
     }
 
-    public Instances prepareArff(Instances arff, String attributesToRemove) throws Exception {
+    public Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception {
 
         arff = WekaRoles.removeAttributes(arff, attributesToRemove);
 
@@ -125,8 +125,8 @@ public class PredictorFase2 extends Predictor{
         }
         
         PredictorFase2Grupo predictorFase2Grupo = new PredictorFase2Grupo();
-        String fase2TempPath = Constants.TEMP_PRED_FOLDER_TO_ORG + "fase2Grupo" + Constants.ARFF_FILE;
-        Instances fase2GrupoResult = predictorFase2Grupo.predecir(Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff", "1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "2", fase2TempPath);
+        String fase2TempPath = folderName + "fase2Grupo" + Constants.ARFF_FILE;
+        Instances fase2GrupoResult = predictorFase2Grupo.predecir(folderName + "resumen.arff", "1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "2", fase2TempPath);
         return fase2GrupoResult;
     }
 

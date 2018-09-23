@@ -16,22 +16,23 @@ public class PredictorDirecto extends Predictor{
 
     public String predecirDirecto (String file, String modelPred, boolean total) throws Exception {
     	ParserPrediccion parserPrediccion = new ParserPrediccion();
+    	String folderName = "";
         if (!total) {
-    		parserPrediccion.parseJsonParcial(file, modelPred);
+        	folderName = parserPrediccion.parseJsonParcial(file, modelPred);
         }else {
-        	parserPrediccion.parseJsonTotal(file, modelPred);
+        	folderName = parserPrediccion.parseJsonTotal(file, modelPred);
         }
         OrganizadorPrediccion organizadorPrediccion = new OrganizadorPrediccion();
-		organizadorPrediccion.organizar_carpeta(Constants.TEMP_PRED_FOLDER_TO_ORG, Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff");
+		organizadorPrediccion.organizar_carpeta(folderName, folderName  + "resumen.arff");
         model = modelPred;
-        Instances prediccionDirecta = predecir(Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff",
-               "1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE, "2");
+        Instances prediccionDirecta = predecir(folderName + "resumen.arff",
+               "1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE, "2", folderName);
         System.out.println(prediccionDirecta.toString());
-        Util.deleteFolder(Constants.USR_TEMP_FOLDER);
+        Util.deleteFolder(folderName);
         return prediccionDirecta.toString();
     }
 
-    public Instances prepareArff(Instances arff, String attributesToRemove) throws Exception {
+    public Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception {
        
         arff = WekaRoles.removeAttributes(arff, attributesToRemove);
 
@@ -131,7 +132,7 @@ public class PredictorDirecto extends Predictor{
         }
         
         PredictorDirectoGrupo predictorDirectoGrupo = new PredictorDirectoGrupo();
-        return predictorDirectoGrupo.predecir(Constants.TEMP_PRED_FOLDER_TO_ORG + "resumen.arff", "1-3, 5-5",
+        return predictorDirectoGrupo.predecir(folderName + "resumen.arff", "1-3, 5-5",
         		System.getProperty("user.dir") + "\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "3", null);
     }
 

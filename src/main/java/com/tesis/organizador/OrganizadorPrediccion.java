@@ -72,8 +72,8 @@ public class OrganizadorPrediccion {
                 if (f.isFile())
                     try {
                         organizar_arff(f.getPath());
-                        guardarArff(Constants.TEMP_PRED_FOLDER_TO_ORG + "dataOrganizada" + File.separator);
-                        path_archivos_resumidos.add(Constants.TEMP_PRED_FOLDER_TO_ORG + "dataOrganizada" + File.separator + nombre_arff);
+                        guardarArff(direccion + "dataOrganizada" + File.separator);
+                        path_archivos_resumidos.add(direccion + "dataOrganizada" + File.separator + nombre_arff);
 
                         //Limpio variables
                         instances.clear();
@@ -101,8 +101,8 @@ public class OrganizadorPrediccion {
         }else{
 
             organizar_arff(direccion);
-            guardarArff(Constants.TEMP_PRED_FOLDER_TO_ORG + "dataOrganizada" + File.separator);
-            path_archivos_resumidos.add(Constants.TEMP_PRED_FOLDER_TO_ORG + "dataOrganizada" + File.separator+ nombre_arff);
+            guardarArff(direccion + "dataOrganizada" + File.separator);
+            path_archivos_resumidos.add(direccion + "dataOrganizada" + File.separator+ nombre_arff);
             nombre_arff = resultFilePath;
             obtenerConjuntosArff(path_archivos_resumidos.get(0));
             guardarArff("");
@@ -202,9 +202,6 @@ public class OrganizadorPrediccion {
 
         agregarAtributosSymlog();
 
-
-
-
         //Agrego columna de cant. de mensajes
         //Atributo indice [instances.numAttributes()-1]. Siempre ultima columna.
         Attribute attrib = new Attribute("cant_mensajes");
@@ -287,25 +284,6 @@ public class OrganizadorPrediccion {
                 }
             }
 
-            //agregarRolCompaneros();
-            //Mapeo el rol con su tipo.
-            //Accion:   Impulsor,implementador,finalizador = 8, 12, 7 -> [64]
-            //Sociales: Investigador, Cohesionador o Colaborador, Coordinador = 14, 10, 15 -> [65]
-            //Mentales: Monitor, Especialista, Cerebro = 13, 11 ,9 -> [66]
-            //TODO: Chequear que funcione correctamente!
-           /* mapeo_tipo_rol.put(9, POS_MAPEO_ROL_1);
-            mapeo_tipo_rol.put(13, POS_MAPEO_ROL_1);
-            mapeo_tipo_rol.put(8, POS_MAPEO_ROL_1);
-            mapeo_tipo_rol.put(15, POS_MAPEO_ROL_2);
-            mapeo_tipo_rol.put(11, POS_MAPEO_ROL_2);
-            mapeo_tipo_rol.put(16, POS_MAPEO_ROL_2);
-            mapeo_tipo_rol.put(14, POS_MAPEO_ROL_3);
-            mapeo_tipo_rol.put(12, POS_MAPEO_ROL_3);
-            mapeo_tipo_rol.put(10, POS_MAPEO_ROL_3);
-            agregarTipoRol();*/
-
-
-
             agregarTipoConducta();
 
 
@@ -343,41 +321,6 @@ public class OrganizadorPrediccion {
         instances.insertAttributeAt(attribute,instances.numAttributes());
     }
 
-
-    /*public void agregarTipoConducta(){
-        //Mapeo de conducta SYM .
-        //Symlog - IPA
-        //# Dominante # Negativo + # Pregunta ()
-        //# Sumiso # Positivo + # Responde ()
-        //# Amistoso # Positivo
-        //# No Amistoso # Negativo
-        // # Tarea # Pregunta + # Responde
-        // Socioemocional #Positivo + # Negativo
-        //De reaccion se saca Pos,Neg,Preg,Resp [0..3]
-        //CX[46-57]
-        for (Instance integrante: integrantes.values()){
-            for (int i=POS_INF_CRUDO_CONDUCTA_IPA; i<=POS_SUP_CRUDO_CONDUCTA_IPA; i++) {
-                if ( i>= POS_INF_CRUDO_CONDUCTA_IPA && i<=POS_INF_CRUDO_CONDUCTA_IPA+2 ) {
-                    //Amistoso
-                    integrante.setValue(POS_MAPEO_SYMLOG_1, integrante.value(POS_MAPEO_SYMLOG_1) + integrante.value(i));
-                    //Sumiso
-                    integrante.setValue(POS_MAPEO_SYMLOG_4, integrante.value(POS_MAPEO_SYMLOG_4) + integrante.value(i));
-                }
-                if ( i>= POS_INF_CRUDO_CONDUCTA_IPA+3 && i<=POS_INF_CRUDO_CONDUCTA_IPA+5 )
-                    //Sumiso
-                    integrante.setValue(POS_MAPEO_SYMLOG_4, integrante.value(POS_MAPEO_SYMLOG_4) + integrante.value(i));
-                if ( i>= POS_INF_CRUDO_CONDUCTA_IPA+6 && i<=POS_INF_CRUDO_CONDUCTA_IPA+8  )
-                    //Dominante
-                    integrante.setValue(POS_MAPEO_SYMLOG_3, integrante.value(POS_MAPEO_SYMLOG_3) + integrante.value(i));
-                if ( i>= POS_INF_CRUDO_CONDUCTA_IPA+9 && i<=POS_INF_CRUDO_CONDUCTA_IPA+11 ) {
-                    //No-Amistoso
-                    integrante.setValue(POS_MAPEO_SYMLOG_2, integrante.value(POS_MAPEO_SYMLOG_2) + integrante.value(i));
-                    //Dominante
-                    integrante.setValue(POS_MAPEO_SYMLOG_3, integrante.value(POS_MAPEO_SYMLOG_3) + integrante.value(i));
-                }
-            }
-        }
-    }*/
 
     public void agregarTipoConducta(){
         //Mapeo de conducta SYM .

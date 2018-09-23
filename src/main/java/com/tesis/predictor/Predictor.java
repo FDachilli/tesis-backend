@@ -12,11 +12,10 @@ public abstract class Predictor extends PredictorAbstracto{
 
 	protected String model;
 
-    public Instances predecir(String unlabeledFilePath, String attributesToRemove, String pathModel, String posNombre) throws Exception {
+    public Instances predecir(String unlabeledFilePath, String attributesToRemove, String pathModel, String posNombre, String folderName) throws Exception {
 
         Instances unlabeled = Weka.loadDataset(unlabeledFilePath);
-        unlabeled = prepareArff(unlabeled, attributesToRemove);
-        //Classifier cls = wekaRoles.loadModel("results\\procesamientoDirecto\\modelos\\" + namesClasificadores[j] + "-directo.dat");
+        unlabeled = prepareArff(unlabeled, attributesToRemove, folderName);
         Classifier cls = wekaRoles.loadModel(pathModel);
         // set class attribute
         unlabeled.setClassIndex(0);
@@ -40,7 +39,7 @@ public abstract class Predictor extends PredictorAbstracto{
     
 
 	@Override
-	public abstract Instances prepareArff(Instances arff, String attributesToRemove) throws Exception;
+	public abstract Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception;
 
    
 
