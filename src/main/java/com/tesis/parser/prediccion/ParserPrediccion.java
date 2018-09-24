@@ -203,7 +203,7 @@ public class ParserPrediccion {
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);
 
             try {
-                values[valuesIndex++] = sentencesDataset.attribute("fecha").parseDate(lista_atributos.get(i).getFecha());
+                values[valuesIndex++] = sentencesDataset.attribute("fecha").parseDate(i<lista_atributos.size() ? lista_atributos.get(i).getFecha(): lista_atributos.get(lista_atributos.size()-1).getFecha());
             } catch (ParseException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

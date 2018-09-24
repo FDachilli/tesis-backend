@@ -1,5 +1,7 @@
 package com.tesis.predictor;
 
+import java.io.File;
+
 import com.tesis.commons.Constants;
 import com.tesis.commons.Util;
 
@@ -26,7 +28,7 @@ public class PredictorDirecto extends Predictor{
 		organizadorPrediccion.organizar_carpeta(folderName, folderName  + "resumen.arff");
         model = modelPred;
         Instances prediccionDirecta = predecir(folderName + "resumen.arff",
-               "1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoDirecto\\" + model + Constants.DAT_FILE, "2", folderName);
+               "1-3, 5-5", System.getProperty("user.dir") + File.separator + "modelos" + File.separator + "procesamientoDirecto" + File.separator + model + Constants.DAT_FILE, "2", folderName);
         System.out.println(prediccionDirecta.toString());
         Util.deleteFolder(folderName);
         return prediccionDirecta.toString();
@@ -133,7 +135,7 @@ public class PredictorDirecto extends Predictor{
         
         PredictorDirectoGrupo predictorDirectoGrupo = new PredictorDirectoGrupo();
         return predictorDirectoGrupo.predecir(folderName + "resumen.arff", "1-3, 5-5",
-        		System.getProperty("user.dir") + "\\modelos\\procesamientoDirectoGrupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "3", null);
+        		System.getProperty("user.dir") + File.separator +"modelos" + File.separator + "procesamientoDirectoGrupo" + File.separator + model + Constants.DAT_FILE, sentencesDataset, 2, "3", null);
     }
 
 

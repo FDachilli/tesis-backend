@@ -12,6 +12,7 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class PredictorFase2 extends Predictor{
@@ -21,7 +22,7 @@ public class PredictorFase2 extends Predictor{
 
     		model = modelPred;
             return predecir(filePath
-                    ,"1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoFase2\\" + model + Constants.DAT_FILE, "2", folderName);
+                    ,"1-3, 5-5", System.getProperty("user.dir") + File.separator + "modelos" + File.separator + "procesamientoFase2" + File.separator + model + Constants.DAT_FILE, "2", folderName);
             
     }
 
@@ -126,7 +127,7 @@ public class PredictorFase2 extends Predictor{
         
         PredictorFase2Grupo predictorFase2Grupo = new PredictorFase2Grupo();
         String fase2TempPath = folderName + "fase2Grupo" + Constants.ARFF_FILE;
-        Instances fase2GrupoResult = predictorFase2Grupo.predecir(folderName + "resumen.arff", "1-3, 5-5", System.getProperty("user.dir") + "\\modelos\\procesamientoFase2Grupo\\" + model + Constants.DAT_FILE, sentencesDataset, 2, "2", fase2TempPath);
+        Instances fase2GrupoResult = predictorFase2Grupo.predecir(folderName + "resumen.arff", "1-3, 5-5", System.getProperty("user.dir") + File.separator + "modelos" + File.separator + "procesamientoFase2Grupo" + File.separator + model + Constants.DAT_FILE, sentencesDataset, 2, "2", fase2TempPath);
         return fase2GrupoResult;
     }
 
