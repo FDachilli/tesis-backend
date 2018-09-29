@@ -6,7 +6,7 @@ import com.tesis.commons.Constants;
 import com.tesis.commons.Util;
 
 import com.tesis.organizador.OrganizadorPrediccion;
-import com.tesis.parser.prediccion.ParserPrediccion;
+import com.tesis.parser.ParserPrediccion;
 import com.tesis.predictor.grupo.PredictorDirectoGrupo;
 import com.tesis.weka.WekaRoles;
 

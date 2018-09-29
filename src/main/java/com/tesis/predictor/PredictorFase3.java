@@ -25,6 +25,7 @@ public class PredictorFase3 extends Predictor{
         return predecir(fase2TempPath
                 ,"", System.getProperty("user.dir") + File.separator + "modelos" + File.separator + "procesamientoFase3" + File.separator + model + Constants.DAT_FILE, "3", folderName);
     }
+    
 
     public Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception {
 

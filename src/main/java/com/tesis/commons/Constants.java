@@ -6,30 +6,25 @@ package com.tesis.commons;
 import java.io.File;
 import java.util.Hashtable;
 
-/**
- * Contiene las constantes utilizadas en todo el código
- * @author martinmineo
- *
- */
 public class Constants {
-    public static final String DATASETS_FOLDER = "datasets" + File.separator;
-    public static final String HANGOUTS_FOLDER = DATASETS_FOLDER + "hangouts" + File.separator;
+    
     public static final String MODELS_FOLDER =  "modelos" + File.separator;
     public static final String RESULTS_FOLDER =  "resultados" + File.separator;
     public static final String PREDICTIONS_FOLDER =  "predicciones" + File.separator;
-    public static final String DIRECTO_LABELED_FOLDER = "results" + File.separator + "labeled" + File.separator + "Directo" + File.separator;
     public static final String MODELS_DIRECTO_FOLDER = "procesamientoDirecto" + File.separator + MODELS_FOLDER;
     public static final String MODELS_DIRECTO_FILTROS_FOLDER = "results" + File.separator + "resample_discretize" + File.separator + "procesamientoDirecto" + File.separator + MODELS_FOLDER;
-    public static final String RESULTS_DIRECTO_FOLDER = "results" + File.separator + "procesamientoDirecto" + File.separator + RESULTS_FOLDER;
-    public static final String RESULTS_DIRECTO_FILTROS_FOLDER = "results" + File.separator  + "resample_discretize" + File.separator + "procesamientoDirecto" + File.separator + RESULTS_FOLDER;
     public static final String PREDICTIONS_DIRECTO_FOLDER = "results" + File.separator + "procesamientoDirecto" + File.separator + PREDICTIONS_FOLDER;
-    public static final String FASES_LABELED_FOLDER = "results" + File.separator + "labeled" + File.separator + "Fases" + File.separator;
     public static final String FASES_FOLDER = "results" + File.separator + "procesamientoFases" + File.separator;
-    public static final String FASES_FILTROS_FOLDER = "results" + File.separator + "resample_discretize" + File.separator + "procesamientoFases" + File.separator;
     public static final String FASE_DOS_FOLDER = "Fase2" + File.separator;
     public static final String FASE_TRES_FOLDER = "Fase3" + File.separator;
-    public static final String DIRECTO_GRUPOS_LABELED_FOLDER = "results" + File.separator + "labeled" + File.separator + "Grupos_Directo" + File.separator;
-    public static final String FASES_GRUPOS_LABELED_FOLDER = "results" + File.separator + "labeled" + File.separator + "Grupos_Fases" + File.separator;
+    
+    public static final String CLAS1_MODELS = MODELS_FOLDER + "procesamientoFase3Compuesto" + File.separator + "clasificador1" + File.separator;
+    public static final String CLAS2_MODELS = MODELS_FOLDER + "procesamientoFase3Compuesto" + File.separator + "clasificador2" + File.separator;
+    public static final String CLAS3_MODELS = MODELS_FOLDER + "procesamientoFase3Compuesto" + File.separator + "clasificador3" + File.separator;
+    
+    public static final String CLAS1_MODELS_GRUPO = MODELS_FOLDER + "procesamientoFase3GrupoCompuesto" + File.separator + "clasificador1" + File.separator;
+    public static final String CLAS2_MODELS_GRUPO = MODELS_FOLDER + "procesamientoFase3GrupoCompuesto" + File.separator + "clasificador2" + File.separator;
+    public static final String CLAS3_MODELS_GRUPO = MODELS_FOLDER + "procesamientoFase3GrupoCompuesto" + File.separator + "clasificador3" + File.separator;
 
     public static final String TEMP_FOLDER = "temp" + File.separator;
     public static final String USER_DIR = System.getProperty("user.dir");

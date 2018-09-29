@@ -22,8 +22,7 @@ public class PredictorFase3Grupo extends PredictorGrupo{
             int instanceIndex = 0;
             String rol = "?";
             String tipo_rol = instance.stringValue(instanceIndex++);
-            //String nombre = instance.stringValue(instanceIndex++);
-  
+           
             Double C1 = instance.value(instanceIndex++);
             Double C2 = instance.value(instanceIndex++);
             Double C3 = instance.value(instanceIndex++);
@@ -63,8 +62,7 @@ public class PredictorFase3Grupo extends PredictorGrupo{
             double[] values = new double[sentencesDataset.numAttributes()];
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(rol);
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(tipo_rol);
-            //values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).addStringValue(nombre);    
-
+           
             values[valuesIndex++] = C1;
             values[valuesIndex++] = C2;
             values[valuesIndex++] = C3;

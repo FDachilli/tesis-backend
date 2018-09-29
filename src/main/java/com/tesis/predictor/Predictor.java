@@ -6,6 +6,8 @@ import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
+import weka.filters.Filter;
+import weka.filters.unsupervised.instance.RemoveWithValues;
 
 
 public abstract class Predictor extends PredictorAbstracto{
@@ -14,9 +16,18 @@ public abstract class Predictor extends PredictorAbstracto{
 
     public Instances predecir(String unlabeledFilePath, String attributesToRemove, String pathModel, String posNombre, String folderName) throws Exception {
 
+           return predecir(unlabeledFilePath, attributesToRemove, pathModel, posNombre, folderName, "", "");
+
+    }
+    
+    public Instances predecir(String unlabeledFilePath, String attributesToRemove, String pathModel, String posNombre, String folderName, String attributeIndex, String nominalIndices) throws Exception {
+
         Instances unlabeled = Weka.loadDataset(unlabeledFilePath);
         unlabeled = prepareArff(unlabeled, attributesToRemove, folderName);
         Classifier cls = wekaRoles.loadModel(pathModel);
+        if(!attributeIndex.isEmpty() && !nominalIndices.isEmpty()){
+        	unlabeled = removeInstances(unlabeled, attributeIndex, nominalIndices);
+        }
         // set class attribute
         unlabeled.setClassIndex(0);
 
@@ -31,8 +42,6 @@ public abstract class Predictor extends PredictorAbstracto{
             labeled.instance(i).setClassValue(clsLabel);
         }
 
-        // Save newly labeled data
-        //ConverterUtils.DataSink.write(labeledFilePath, labeled);
         return labeled;
 
     }
@@ -41,6 +50,5 @@ public abstract class Predictor extends PredictorAbstracto{
 	@Override
 	public abstract Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception;
 
-   
 
 }

@@ -1,4 +1,4 @@
-package com.tesis.parser.prediccion;
+package com.tesis.parser;
 
 import java.io.File;
 import java.io.FileWriter;
