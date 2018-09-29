@@ -15,19 +15,23 @@ import weka.core.Instances;
 public class PredictorFase3Compuesto extends Predictor{
 	
 	private Instances readyDataset;
+	private String model2;
+	private String model3;
 	
 	public PredictorFase3Compuesto () {
 		super();
 		readyDataset = null;
 	}
 	
-   public Instances predecirFase3Compuesto (Instances resultFase2, String modelPred, String folderName) throws Exception {
-	    model = modelPred;
+   public Instances predecirFase3Compuesto (Instances resultFase2, String modelc1, String modelc2, String modelc3, String folderName) throws Exception {
+	    model = modelc1;
+	    model2 = modelc2;
+	    model3 = modelc3;
     	String fase2TempPath = folderName + "fase2" + Constants.ARFF_FILE;
     	Weka.saveDataset(resultFase2, fase2TempPath);
-    	Instances clas1 = predecir(fase2TempPath,"", System.getProperty("user.dir") + File.separator + Constants.CLAS1_MODELS + modelPred + Constants.DAT_FILE, "3", folderName, "2", "2,3");
-    	Instances clas2 = predecir(fase2TempPath,"", System.getProperty("user.dir") + File.separator + Constants.CLAS2_MODELS + modelPred + Constants.DAT_FILE, "3", folderName, "2", "1,3");
-    	Instances clas3 = predecir(fase2TempPath,"", System.getProperty("user.dir") + File.separator + Constants.CLAS3_MODELS + modelPred + Constants.DAT_FILE, "3", folderName, "2", "1,2");
+    	Instances clas1 = predecir(fase2TempPath,"", System.getProperty("user.dir") + File.separator + Constants.CLAS1_MODELS + modelc1 + Constants.DAT_FILE, "3", folderName, "2", "2,3");
+    	Instances clas2 = predecir(fase2TempPath,"", System.getProperty("user.dir") + File.separator + Constants.CLAS2_MODELS + modelc2 + Constants.DAT_FILE, "3", folderName, "2", "1,3");
+    	Instances clas3 = predecir(fase2TempPath,"", System.getProperty("user.dir") + File.separator + Constants.CLAS3_MODELS + modelc3 + Constants.DAT_FILE, "3", folderName, "2", "1,2");
         return WekaRoles.mergeInstances(clas1, clas2, clas3);
 
     }
@@ -140,7 +144,7 @@ public class PredictorFase3Compuesto extends Predictor{
 	       }
 	       
 	       PredictorFase3CompuestoGrupo predictorFase3Grupo = new PredictorFase3CompuestoGrupo();
-	       readyDataset = predictorFase3Grupo.predecir(folderName, model, sentencesDataset);
+	       readyDataset = predictorFase3Grupo.predecir(folderName, model, model2, model3, sentencesDataset);
 	   }
        return readyDataset;
    }

@@ -11,13 +11,13 @@ import weka.core.Instances;
 
 public class PredictorFase3CompuestoGrupo extends PredictorFase3Grupo {
 	
-	public Instances predecir(String folderName, String model, Instances labeledDataset) throws Exception {
+	public Instances predecir(String folderName, String modelc1, String modelc2, String modelc3, Instances labeledDataset) throws Exception {
 		Instances retorno = null;
-		Instances clas1 = predecir(folderName + "fase2Grupo" + Constants.ARFF_FILE, "", System.getProperty("user.dir") + File.separator + Constants.CLAS1_MODELS_GRUPO + model + Constants.DAT_FILE, labeledDataset, 4, null, null, "2", "2,3");
+		Instances clas1 = predecir(folderName + "fase2Grupo" + Constants.ARFF_FILE, "", System.getProperty("user.dir") + File.separator + Constants.CLAS1_MODELS_GRUPO + modelc1 + Constants.DAT_FILE, labeledDataset, 4, null, null, "2", "2,3");
 		retorno = combinarResultados(retorno, clas1, labeledDataset, "4", "2,3");
-    	Instances clas2 = predecir(folderName + "fase2Grupo" + Constants.ARFF_FILE, "", System.getProperty("user.dir") + File.separator + Constants.CLAS2_MODELS_GRUPO + model + Constants.DAT_FILE, labeledDataset, 4, null, null, "2", "1,3");
+    	Instances clas2 = predecir(folderName + "fase2Grupo" + Constants.ARFF_FILE, "", System.getProperty("user.dir") + File.separator + Constants.CLAS2_MODELS_GRUPO + modelc2 + Constants.DAT_FILE, labeledDataset, 4, null, null, "2", "1,3");
     	retorno = combinarResultados(retorno, clas2, labeledDataset, "4", "1,3");
-    	Instances clas3 = predecir(folderName + "fase2Grupo" + Constants.ARFF_FILE, "", System.getProperty("user.dir") + File.separator + Constants.CLAS3_MODELS_GRUPO + model + Constants.DAT_FILE, labeledDataset, 4, null, null, "2", "1,2");
+    	Instances clas3 = predecir(folderName + "fase2Grupo" + Constants.ARFF_FILE, "", System.getProperty("user.dir") + File.separator + Constants.CLAS3_MODELS_GRUPO + modelc3 + Constants.DAT_FILE, labeledDataset, 4, null, null, "2", "1,2");
     	retorno = combinarResultados(retorno, clas3, labeledDataset, "4", "1,2");
     	return retorno;
 	}

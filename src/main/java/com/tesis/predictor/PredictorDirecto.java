@@ -16,14 +16,9 @@ import weka.core.Instances;
 
 public class PredictorDirecto extends Predictor{
 
-    public String predecirDirecto (String file, String modelPred, boolean total) throws Exception {
+    public String predecirDirecto (String file, String modelPred) throws Exception {
     	ParserPrediccion parserPrediccion = new ParserPrediccion();
-    	String folderName = "";
-        if (!total) {
-        	folderName = parserPrediccion.parseJsonParcial(file, modelPred);
-        }else {
-        	folderName = parserPrediccion.parseJsonTotal(file, modelPred);
-        }
+    	String folderName = parserPrediccion.parseJsonParcial(file, modelPred);
         OrganizadorPrediccion organizadorPrediccion = new OrganizadorPrediccion();
 		organizadorPrediccion.organizar_carpeta(folderName, folderName  + "resumen.arff");
         model = modelPred;

@@ -21,7 +21,7 @@ public class RolesService {
 	@Path("/predecirDirecto")
 	public String predecirDirecto(@QueryParam("conversation") String conversation, @QueryParam("model") String model) throws Exception {
         PredictorDirecto predictorDirecto = new PredictorDirecto();
-        String prediccion =  predictorDirecto.predecirDirecto(conversation, model, false);
+        String prediccion =  predictorDirecto.predecirDirecto(conversation, model);
 		return prediccion;
 	}
 	
@@ -43,7 +43,7 @@ public class RolesService {
 		String model2 = JsonUtil.getStringValue(models, "model2");
 		String model3 = JsonUtil.getStringValue(models, "model3");
         PredictorFases predictorFases = new PredictorFases();
-		return predictorFases.predecirFases(conversation, model1,model2, model3, false);
+		return predictorFases.predecirFases(conversation, model1,model2, model3);
 	}
 	
 	@GET
@@ -53,8 +53,10 @@ public class RolesService {
 		String model1 = JsonUtil.getStringValue(models, "model1");
 		String model2 = JsonUtil.getStringValue(models, "model2");
 		String model3 = JsonUtil.getStringValue(models, "model3");
+		String model4 = JsonUtil.getStringValue(models, "model4");
+		String model5 = JsonUtil.getStringValue(models, "model5");
         PredictorFases predictorFases = new PredictorFases();
-		return predictorFases.predecirFasesCompuesto(conversation, model1,model2, model3, false);
+		return predictorFases.predecirFasesCompuesto(conversation, model1,model2, model3, model4, model5);
 	}
 	
 }
