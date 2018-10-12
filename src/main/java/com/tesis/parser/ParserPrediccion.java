@@ -149,7 +149,7 @@ public class ParserPrediccion {
             atributos.setFecha(stringDate);
             String mensaje = Util.addEscapeChar(message.get("message").asText());
             addAttributesToList(lista_atributos, mensaje, atributos);
-			fileContent += "?,'" + message.get("sender").asText() + "','" + mensaje + "'" + '\n';
+			fileContent += "?,'" + message.get("sender").asText().replaceAll("[^a-zA-Z]+","") + "','" + mensaje + "'" + '\n';
 	    }
 		System.out.println(fileContent);
 		
@@ -194,7 +194,7 @@ public class ParserPrediccion {
             String conducta = instance.stringValue(instanceIndex++);
             String classReaction = Constants.reacciones.get(Integer.parseInt(conducta));
             String classArea = Constants.areas.get(Integer.parseInt(conducta));
-            String nombre = instance.stringValue(instanceIndex++);
+            String nombre = instance.stringValue(instanceIndex++).replaceAll("[^a-zA-Z]+","");
             int valuesIndex = 0;
             double[] values = new double[attributes.size()];
             values[valuesIndex] = sentencesDataset.attribute(valuesIndex++).indexOfValue(conducta);
