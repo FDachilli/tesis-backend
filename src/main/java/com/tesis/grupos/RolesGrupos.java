@@ -75,6 +75,7 @@ public class RolesGrupos {
 				for(Grupo grupo: grupos) {
 					if (grupo.getIntegrantes().size()< size) {
 						grupo.getIntegrantes().add(integrantes.get(0));
+						break;
 					}
 				}
 			}else {
