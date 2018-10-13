@@ -18,7 +18,7 @@ public class PredictorDirecto extends Predictor{
 
     public String predecirDirecto (String file, String modelPred) throws Exception {
     	ParserPrediccion parserPrediccion = new ParserPrediccion();
-    	String folderName = parserPrediccion.parseJsonParcial(file, modelPred);
+    	String folderName = parserPrediccion.parseJsonParcial(file, "");
         OrganizadorPrediccion organizadorPrediccion = new OrganizadorPrediccion();
 		organizadorPrediccion.organizar_carpeta(folderName, folderName  + "resumen.arff");
         model = modelPred;

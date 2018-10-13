@@ -3,9 +3,6 @@ package com.tesis.predictor.grupo;
 import java.io.File;
 
 import com.tesis.commons.Constants;
-import com.tesis.weka.WekaRoles;
-
-import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
