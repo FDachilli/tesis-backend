@@ -130,7 +130,7 @@ public class PredictorDirecto extends Predictor{
         
         PredictorDirectoGrupo predictorDirectoGrupo = new PredictorDirectoGrupo();
         return predictorDirectoGrupo.predecir(folderName + "resumen.arff", "1-3, 5-5",
-        		System.getProperty("user.dir") + File.separator +"modelos" + File.separator + "procesamientoDirectoGrupo" + File.separator + model + Constants.DAT_FILE, sentencesDataset, 2, "3", null);
+        		System.getProperty("user.dir") + File.separator +"modelos" + File.separator + "procesamientoDirectoGrupo" + File.separator + model + Constants.DAT_FILE, sentencesDataset, 2, "2", null);
     }
 
 
