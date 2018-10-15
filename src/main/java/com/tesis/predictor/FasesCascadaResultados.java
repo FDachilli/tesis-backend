@@ -40,7 +40,7 @@ public class FasesCascadaResultados {
 
     /**
      * Devuelve los resultados de la clasificaciÃ³n del clasificador 3
-     * @return String Resultados de la clasificaciÃ³n del clasificador 3
+     * @return Instances Resultados de la clasificaciÃ³n del clasificador 3
      */
     public Instances getClassifier3Results() {
         return classifier3Results;

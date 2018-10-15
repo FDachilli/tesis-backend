@@ -33,7 +33,11 @@ import org.weka.Weka;
 
 public class WekaRoles {
 
-
+	/**
+     * Carga el modelo deseado
+     * @param fileName path del archivo que contiene el modelo
+     * @return AbstractClassifier
+     */
     public AbstractClassifier loadModel(String fileName) {
         try {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
@@ -42,12 +46,16 @@ public class WekaRoles {
             in.close();
             return classifier;
         } catch (Exception e) {
-            //TODO
             System.out.println("Problem found when reading: " + fileName);
+            return null;
         }
-        return null;
+      
     }
 
+    /**
+     * Crea el atributo rol
+     * @return Attribute
+     */
     public static Attribute classRolAttribute() {
         ArrayList<String> labels = new ArrayList<>();
         labels.add("finalizador");
@@ -63,6 +71,10 @@ public class WekaRoles {
         return attClassRol;
     }
 
+    /**
+     * Crea el atributo rol companeros
+     * @return Attribute
+     */
     public static Attribute classRolCompanerosAttribute() {
         ArrayList<String> labels = new ArrayList<>();
         labels.add("finalizador");
@@ -78,6 +90,10 @@ public class WekaRoles {
         return attClassRol;
     }
     
+    /**
+     * Crea los atributos symlog
+     * @return lista de Attribute con los atributos symlog
+     */
     public static ArrayList<Attribute> getSymlogAttributes() {
 
         ArrayList<Attribute> attributes = new ArrayList<>();
@@ -90,6 +106,10 @@ public class WekaRoles {
         return attributes;
     }
 
+    /**
+     * Crea el atributo tipo rol
+     * @return Attribute
+     */
     public static Attribute classTipoRolAttribute() {
         ArrayList<String> labels = new ArrayList<>();
         labels.add("social");
@@ -100,6 +120,10 @@ public class WekaRoles {
         return attClassRol;
     }
 
+    /**
+     * Crea el atributo tipo rol companeros
+     * @return Attribute
+     */
     public static Attribute classTipoRolCompanerosAttribute() {
         ArrayList<String> labels = new ArrayList<>();
         labels.add("social");
@@ -110,6 +134,12 @@ public class WekaRoles {
         return attClassRol;
     }
 
+    /**
+     * Remueve los atributos que no son de interes
+     * @param arff archivo para aplicar filtro
+     * @param attsToRemove posicion de los atributos a aplicar el filtro
+     * @return Instances instancias con el filtro aplicado
+     */
     public static Instances removeAttributes (Instances arff, String attsToRemove) throws Exception {
 
         String[] options = new String[2];
@@ -122,67 +152,6 @@ public class WekaRoles {
 
     }
 
-    public static Instances applyDiscretizeConductas (Instances arff, String pos_conductas) throws Exception{
-        //Discretize conductas IPA
-        Discretize discretizeFilter = new Discretize();
-        discretizeFilter.setAttributeIndices(pos_conductas);
-        discretizeFilter.setUseBinNumbers(true);
-        discretizeFilter.setBins(6);
-        discretizeFilter.setInputFormat(arff);
-        return Filter.useFilter(arff,discretizeFilter);
-    }
-
-    public static Instances applyDiscretizeReacciones (Instances arff, String pos_reacciones) throws Exception{
-        //Discretize conductas IPA
-        Discretize discretizeFilter = new Discretize();
-        discretizeFilter.setAttributeIndices(pos_reacciones);
-        discretizeFilter.setUseBinNumbers(true);
-        discretizeFilter.setBins(4);
-        discretizeFilter.setInputFormat(arff);
-        return Filter.useFilter(arff,discretizeFilter);
-    }
-
-    public static Instances applyResample(Instances arff) throws Exception{
-        Resample resampleFilter = new Resample();
-        resampleFilter.setInputFormat(arff);
-        return Filter.useFilter(arff,resampleFilter);
-    }
-
-    public static List<Classifier> getClassiffiers() throws Exception {
-        List <Classifier> clasificadores = new ArrayList<>();
-        clasificadores.add(new J48());
-        clasificadores.add(new SMO());
-        clasificadores.add(new NaiveBayes());
-        clasificadores.add(new BayesNet());
-        clasificadores.add(new REPTree());
-        clasificadores.add(new PART());
-        clasificadores.add(new JRip());
-        clasificadores.add(new KStar());
-        clasificadores.add(new LMT());
-        clasificadores.add(new IBk());
-        clasificadores.add(new DecisionTable());
-        clasificadores.add(new LogitBoost());
-
-        MultiClassClassifier mcModel = new MultiClassClassifier();
-        String optionsMC[] = {
-                "-M","0",
-                "-R","2.0",
-                "-S","1",
-                "-W","weka.classifiers.functions.SMO",
-                "--",
-                "-C","1",
-                "-L","0.001",
-                "-P","1.0e-12",
-                "-M",
-                "-N", "0",
-                "-V","-1",
-                "-W","1",
-                "-K", "weka.classifiers.functions.supportVector.PolyKernel -C 250007 -E 1.0"
-        };
-        mcModel.setOptions(optionsMC);
-        clasificadores.add(mcModel);
-        return clasificadores;
-    }
     
     /**
      * Mezcla las instancias de los archivos pasados como parámetro

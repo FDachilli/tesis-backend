@@ -23,6 +23,15 @@ public class PredictorFase3Compuesto extends Predictor{
 		readyDataset = null;
 	}
 	
+	/**
+     * Predice fase 3 compuesto
+     * @param resultFase2 resultado de la prediccion de la fase 2
+     * @param modelc1 modelo del clasificador 1 a utilizar para predecir
+     * @param modelc2 modelo del clasificador 2 a utilizar para predecir
+     * @param modelc3 modelo del clasificador 3 a utilizar para predecir
+     * @param folderName nombre de la carpeta temporal asignada al proceso
+     * @return Instances con predicciones
+     */
    public Instances predecirFase3Compuesto (Instances resultFase2, String modelc1, String modelc2, String modelc3, String folderName) throws Exception {
 	    model = modelc1;
 	    model2 = modelc2;
@@ -36,6 +45,13 @@ public class PredictorFase3Compuesto extends Predictor{
 
     }
 
+   /**
+    * Prepara el archivo arff para predecir la fase 3 compuesto
+    * @param arff instancias para preparar
+    * @param attributesToRemove posicion de los atributos a remover
+    * @param folderName nombre de la carpeta temporal del proceso actual
+    * @return Instances instancias preparadas para predecir
+    */
    public Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception {
 
 	   if (readyDataset == null) {

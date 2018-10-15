@@ -12,13 +12,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RolesGrupos {
 	
+	/**
+     * Arma grupos balanceados a partir de una lista de participantes y un tamaño
+     * @param participantes json con la lista de participantes
+     * @param size tamaño de los grupos
+     * @return List<Grupo> grupos armados
+     */
 	public List<Grupo> armarGrupo (String participantes ,int size) throws JsonParseException, JsonMappingException, IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		List<Integrante> participantesRoles = mapper.readValue(participantes, new TypeReference<List<Integrante>>(){});
 		List<Grupo> grupos = new ArrayList<>();
-		//TODO ver de usar el size como corte tambien
-		
-		//TODO primero recorrer tratando de meter los dos roles, si se llega al final volver a recorrer tratando de meter 1, y si se llega al final ahi si corte.
 		boolean termino = false;
 		while (!termino) {
 			List<String> rolesFaltantes = new ArrayList<String>() {{

@@ -8,6 +8,14 @@ import weka.core.Instances;
 
 public class PredictorFase3CompuestoGrupo extends PredictorFase3Grupo {
 	
+	/**
+     * Predice fases compuesto
+     * @param file archivo para predecir
+     * @param modelc1 modelo de clasificador 1
+     * @param modelc2 modelo de clasificador 2
+     * @param modelc3 modelo de clasificador 3
+     * @return Instances con prediccion
+     */
 	public Instances predecir(String folderName, String modelc1, String modelc2, String modelc3, Instances labeledDataset) throws Exception {
 		Instances retorno = null;
 		Instances clas1 = predecir(folderName + "fase2Grupo" + Constants.ARFF_FILE, "", System.getProperty("user.dir") + File.separator + Constants.CLAS1_MODELS_GRUPO + modelc1 + Constants.DAT_FILE, labeledDataset, 4, null, null, "2", "2,3");

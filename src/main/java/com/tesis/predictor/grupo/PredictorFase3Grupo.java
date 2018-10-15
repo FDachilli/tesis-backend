@@ -8,7 +8,13 @@ import weka.core.Instances;
 
 public class PredictorFase3Grupo extends PredictorGrupo{
 
-	@Override
+	/**
+     * Prepara el archivo arff para predecir la fase 3 de grupo
+     * @param arff instancias para preparar
+     * @param attributesToRemove posicion de los atributos a remover
+     * @param folderName nombre de la carpeta temporal del proceso actual
+     * @return Instances instancias preparadas para predecir
+     */
 	public Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception {
 		if (!attributesToRemove.isEmpty())
             arff = WekaRoles.removeAttributes(arff, attributesToRemove);

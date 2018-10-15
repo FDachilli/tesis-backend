@@ -18,6 +18,13 @@ import java.util.ArrayList;
 public class PredictorFase2 extends Predictor{
 
 
+	/**
+     * Predice fase 2
+     * @param filePath archivo para predecir
+     * @param modelPred modelo a utilizar para predecir
+     * @param folderName nombre de la carpeta temporal asignada al proceso
+     * @return Instances con predicciones
+     */
     public Instances predecirFase2 (String filePath, String modelPred, String folderName) throws Exception {
 
     		model = modelPred;
@@ -25,7 +32,15 @@ public class PredictorFase2 extends Predictor{
                     ,"1-3, 5-5", System.getProperty("user.dir") + File.separator + "modelos" + File.separator + "procesamientoFase2" + File.separator + model + Constants.DAT_FILE, "2", folderName);
             
     }
-
+    
+    
+    /**
+     * Prepara el archivo arff para predecir la fase 2
+     * @param arff instancias para preparar
+     * @param attributesToRemove posicion de los atributos a remover
+     * @param folderName nombre de la carpeta temporal del proceso actual
+     * @return Instances instancias preparadas para predecir
+     */
     public Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception {
 
         arff = WekaRoles.removeAttributes(arff, attributesToRemove);

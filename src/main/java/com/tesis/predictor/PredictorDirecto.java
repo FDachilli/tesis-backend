@@ -16,11 +16,17 @@ import weka.core.Instances;
 
 public class PredictorDirecto extends Predictor{
 
+	/**
+     * Predice directo
+     * @param file archivo para predecir
+     * @param modelPred modelo a utilizar para predecir
+     * @return String con predicciones
+     */
     public String predecirDirecto (String file, String modelPred) throws Exception {
     	ParserPrediccion parserPrediccion = new ParserPrediccion();
     	String folderName = parserPrediccion.parseJsonParcial(file, "");
         OrganizadorPrediccion organizadorPrediccion = new OrganizadorPrediccion();
-		organizadorPrediccion.organizar_carpeta(folderName, folderName  + "resumen.arff");
+		organizadorPrediccion.organizarCarpeta(folderName, folderName  + "resumen.arff");
         model = modelPred;
         Instances prediccionDirecta = predecir(folderName + "resumen.arff",
                "1-3, 5-5", System.getProperty("user.dir") + File.separator + "modelos" + File.separator + "procesamientoDirecto" + File.separator + model + Constants.DAT_FILE, "2", folderName);
@@ -29,6 +35,13 @@ public class PredictorDirecto extends Predictor{
         return prediccionDirecta.toString();
     }
 
+    /**
+     * Prepara el archivo arff para predecir directo
+     * @param arff instancias para preparar
+     * @param attributesToRemove posicion de los atributos a remover
+     * @param folderName nombre de la carpeta temporal del proceso actual
+     * @return Instances instancias preparadas para predecir
+     */
     public Instances prepareArff(Instances arff, String attributesToRemove, String folderName) throws Exception {
        
         arff = WekaRoles.removeAttributes(arff, attributesToRemove);

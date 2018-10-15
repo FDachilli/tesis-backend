@@ -49,11 +49,14 @@ public class OrganizadorPrediccion {
     public int POS_MAPEO_SYMLOG_SOCIO_EMOCIONAL = 31;
 
 
-    //Dado un arff, obtengo el promedio de cada uno de los integrantes
-    //Y se lo guarda en un nuevo arff.
     public OrganizadorPrediccion(){};
 
-    public void organizar_carpeta(String direccion, String resultFilePath) throws IOException {
+    /**
+     * Organiza la carpeta pasada por parametro obteniendo un resumen de la misma
+     * @param direccion Path donde se encuentran los archivos a organizar
+     * @param resultFilePath Path donde se almacena el resumen
+     */
+    public void organizarCarpeta(String direccion, String resultFilePath) throws IOException {
         File fileAOrganizar = new File(direccion);
         ArrayList<String> path_archivos_resumidos = new ArrayList<>();
         if (fileAOrganizar.isDirectory()) {
@@ -71,7 +74,7 @@ public class OrganizadorPrediccion {
             for (File f : archivos_originales) {
                 if (f.isFile())
                     try {
-                        organizar_arff(f.getPath());
+                        organizarArff(f.getPath());
                         guardarArff(direccion + "dataOrganizada" + File.separator);
                         path_archivos_resumidos.add(direccion + "dataOrganizada" + File.separator + nombre_arff);
 
@@ -100,7 +103,7 @@ public class OrganizadorPrediccion {
                 }
         }else{
 
-            organizar_arff(direccion);
+            organizarArff(direccion);
             guardarArff(direccion + "dataOrganizada" + File.separator);
             path_archivos_resumidos.add(direccion + "dataOrganizada" + File.separator+ nombre_arff);
             nombre_arff = resultFilePath;
@@ -110,7 +113,10 @@ public class OrganizadorPrediccion {
         }
     }
 
-    //Dado un arff obtiene los datos que se precisan y los guarda.
+    /**
+     * Dado un arff obtiene los datos que se precisan y los guarda.
+     * @param direccion Path donde se encuentran el archivo
+     */
     public void obtenerConjuntosArff(String direccion) throws IOException {
         //Obtengo el .arff
         BufferedReader reader =
@@ -120,14 +126,31 @@ public class OrganizadorPrediccion {
         instances = arffReader.getData();
     }
 
+    /**
+     * Obtiene la diferencia de horas entre dos fechas
+     * @param date1 fecha inicio
+     * @param date2 fecha fin
+     * @return long con la diferencia de horas
+     */
     private static long diferenciaDeHoras(Date date1, Date date2) {
         return (date1.getTime() - date2.getTime());
     }
 
+    /**
+     * Obtiene la diferencia de minutos entre dos fechas
+     * @param date1 fecha inicio
+     * @param date2 fecha fin
+     * @return long con la diferencia de horas
+     */
     private static long diferenciaDeMinutos(Date date1, Date date2){
         return (date1.getTime() - date2.getTime());
     }
 
+    /**
+     * Parsea un string a date
+     * @param d string que contiene la fecha a parsear
+     * @return Date con la hora
+     */
     private static Date getDate(String d) throws ParseException {
         //2015-11-07 20:20:23
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -138,9 +161,11 @@ public class OrganizadorPrediccion {
             return dateFormat.parse(d);
     }
 
-    //A partir de un arff le agrego las columnas de roles de sus companeros y
-    //el promedio de comentarios IPA, area y reaccion.
-    public void organizar_arff(String direccion) throws IOException {
+    /**
+     * A partir de un arff se agregan los valores de los promedios de interes
+     * @param direccion string que contiene el archivo a organizar
+     */
+    public void organizarArff(String direccion) throws IOException {
 
         String nombre;
         Double conducta;
@@ -287,17 +312,17 @@ public class OrganizadorPrediccion {
             agregarTipoConducta();
 
 
-            promediar_comentarios(POS_INF_CRUDO_CONDUCTA_IPA, POS_SUP_CRUDO_CONDUCTA_IPA);
-            promediar_comentarios(POS_INF_CRUDO_REACCION_IPA, POS_SUP_CRUDO_REACCION_IPA);
-            promediar_comentarios(POS_INF_CRUDO_AREA_IPA, POS_SUP_CRUDO_AREA_IPA);
-            promediar_comentarios(POS_INF_CRUDO_HORARIO, POS_SUP_CRUDO_HORARIO);
-            promediar_comentarios(POS_MAPEO_SYMLOG_DOMINANTE, POS_MAPEO_SYMLOG_SOCIO_EMOCIONAL);
+            promediarComentarios(POS_INF_CRUDO_CONDUCTA_IPA, POS_SUP_CRUDO_CONDUCTA_IPA);
+            promediarComentarios(POS_INF_CRUDO_REACCION_IPA, POS_SUP_CRUDO_REACCION_IPA);
+            promediarComentarios(POS_INF_CRUDO_AREA_IPA, POS_SUP_CRUDO_AREA_IPA);
+            promediarComentarios(POS_INF_CRUDO_HORARIO, POS_SUP_CRUDO_HORARIO);
+            promediarComentarios(POS_MAPEO_SYMLOG_DOMINANTE, POS_MAPEO_SYMLOG_SOCIO_EMOCIONAL);
 
             //Agrego la de cantidad de mensajes.
             for (String s : cant_comentarios.keySet()) {
                 integrantes.get(s).setValue(instances.numAttributes() - 1, cant_comentarios.get(s));
             }
-            promediar_comentarios_grupo();
+            promediarComentariosGrupo();
             instances.clear();
             instances.addAll(integrantes.values());
         } catch (ParseException e) {
@@ -305,6 +330,9 @@ public class OrganizadorPrediccion {
         }
     }
 
+    /**
+     * Agrega los atributos SYMLOG a las instancias
+     */
     public void agregarAtributosSymlog(){
         Attribute attribute = null;
         attribute = new Attribute("dominante_symlog");
@@ -322,6 +350,9 @@ public class OrganizadorPrediccion {
     }
 
 
+    /**
+     * Mapea los valores de las conductas IPA a los atributos SYMLOG
+     */
     public void agregarTipoConducta(){
         //Mapeo de conducta SYM .
         //Symlog - IPA
@@ -364,7 +395,9 @@ public class OrganizadorPrediccion {
 
     }
 
-    //Retorna el valor entero identificador del area.
+    /**
+     * Retorna el valor entero identificador del area.
+     */
     public Double getDoubleArea(String area){
         if (area.equals("socio-emocional"))
             return 0.0;
@@ -372,7 +405,11 @@ public class OrganizadorPrediccion {
             return 1.0;
     }
 
-    //Retorna el valor entero identificador de la reaccion.
+    /**
+     * Retorna el valor entero identificador de la reaccion.
+     * @param reaccion string que contiene la accion a retornar
+     * @return Double con valor de la accion
+     */
     public Double getDoubleReaccion(String reaccion){
         if (reaccion.equals("positiva"))
             return 0.0;
@@ -383,7 +420,10 @@ public class OrganizadorPrediccion {
         else return 3.0;
     }
 
-    public void promediar_comentarios_grupo(){
+    /**
+     * Promedia los mensajes de los integrantes de cada grupo
+     */
+    public void promediarComentariosGrupo(){
         int tot = 0;
         int pos_cant_com = instances.numAttributes()-1;
         for (Instance instance : integrantes.values()){
@@ -395,7 +435,12 @@ public class OrganizadorPrediccion {
         }
     }
 
-    public void promediar_comentarios(int lim_inf, int lim_sup){
+    /**
+     * Promedia los atributos que se encuantran entre los limites pasados por parametro
+     * @param lim_inf limite inferior del atributo
+     * @param lim_sup limite superior del atributo
+     */
+    public void promediarComentarios(int lim_inf, int lim_sup){
         //Para evitar ConcurrentModificationException.
         HashMap<String,ArrayList<Double>> auxiliar = new HashMap<>();
 
@@ -425,83 +470,9 @@ public class OrganizadorPrediccion {
         }
     }
 
-    //Saco el promedio de comentarios por integrante.
-    public void promedioComentariosIpa(){
-
-        //Para evitar ConcurrentModificationException.
-        HashMap<String,ArrayList<Double>> auxiliar = new HashMap<>();
-
-        //Saco el promedio de los comentarios IPA.
-        for (Instance integrante : integrantes.values()){
-
-            //Almaceno cada promedio en la posicion del arreglo.
-            //Por lo tanto en la integrante.setValue(47) = arr.get(11)
-            ArrayList<Double> arr = new ArrayList<>();
-
-            //Calculo los promedios
-            for (int i=1; i<=12; i++){
-                arr.add(i-1,
-                        integrante.value(integrante.numAttributes()-i)/cant_comentarios.get(integrante.toString(3)));
-            }
-
-            //Guardo los promedios de cada uno
-            auxiliar.put(integrante.toString(3),arr);
-        }
-
-        //Le asigno los respectivos valores a cada integrante
-        for (String integrante : auxiliar.keySet()){
-            Instance instance = integrantes.get(integrante);
-            for (int i=1; i<=12; i++)
-                instance.setValue(instance.numAttributes()-i,
-                        auxiliar.get(integrante).get(i-1));
-            integrantes.put(integrante,instance);
-        }
-
-    }
-
-
-    public void agregarTipoRol(){
-        for (Instance integrante: integrantes.values()){
-            //Los roles van desde 9 a 16
-            for (int i=8; i<=16; i++) {
-                int pos_mapeo = mapeo_tipo_rol.get(i);
-                //Sumo los valores de los roles.
-                integrante.setValue(pos_mapeo, integrante.value(pos_mapeo)+integrante.value(i));
-            }
-        }
-    }
-
-    //Este metodo agrega los roles de los companeros presentes en el grupo
-    public void agregarRolCompaneros(){
-
-        //Variable auxiliar para evitar Cocurrent.
-        ArrayList<Instance> aux = new ArrayList<>();
-
-        for (Instance integrante : integrantes.values()){
-
-            //Seteo en 0 el contador de los roles de companeros
-            for (int i = tam_inicial; i<tam_inicial+9; i++)
-                integrante.setValue(i,0);
-
-            //Busco y agrego los roles de los companeros
-            for (Instance inst_comp : integrantes.values()){
-                if (!integrante.equals(inst_comp)){
-                    for (int i = 9; i<=17; i++){
-                        //Tam inicial == al tamano antes de agregar los nuevos attr.
-                        //En 7 arranca el rol del integrante.
-                        integrante.setValue(tam_inicial-9+i ,integrante.value(tam_inicial-9+i)+inst_comp.value(i));
-                    }
-                }
-            }
-            aux.add(integrante);
-        }
-
-        //Agrego el integrante con los promedios
-        for (Instance i : aux){
-            integrantes.put(i.toString(POS_CRUDO_NOMBRE),i);
-        }
-    }
-
+    /**
+     * Aumenta las posiciones de los atributos segun el enfoque para el cual se resume la carpeta
+     */
     public void aumentarIndices(){
         POS_CRUDO_CONDUCTA += 1;
         POS_CRUDO_REACCION += 1;
@@ -524,6 +495,9 @@ public class OrganizadorPrediccion {
         POS_MAPEO_SYMLOG_SOCIO_EMOCIONAL += 1;
     }
 
+    /**
+     * Aumenta las posiciones de los atributos calculados segun el enfoque para el cual se resume la carpeta
+     */
     public void aumentarIndicesCalculados(){
         POS_INF_CRUDO_CONDUCTA_IPA += 1;
         POS_SUP_CRUDO_CONDUCTA_IPA += 1;
@@ -541,6 +515,9 @@ public class OrganizadorPrediccion {
         POS_MAPEO_SYMLOG_SOCIO_EMOCIONAL += 1;
     }
 
+    /**
+     * Decrementa las posiciones de los atributos calculados segun el enfoque para el cual se resume la carpeta
+     */
     public void decrementarIndicesCalculados(){
         POS_INF_CRUDO_CONDUCTA_IPA -= 1;
         POS_SUP_CRUDO_CONDUCTA_IPA -= 1;
@@ -559,7 +536,9 @@ public class OrganizadorPrediccion {
     }
 
 
-
+    /**
+     * Decrementa las posiciones de los atributos segun el enfoque para el cual se resume la carpeta
+     */
     public void decrementarIndices(){
         POS_CRUDO_CONDUCTA -= 1;
         POS_CRUDO_REACCION -= 1;
@@ -582,6 +561,10 @@ public class OrganizadorPrediccion {
         POS_MAPEO_SYMLOG_SOCIO_EMOCIONAL -= 1;
     }
 
+    /**
+     * Guarda en la direccion pasada por parametro las instancias del resumen
+     * @param direccion path del archivo a almancenar
+     */
     public void guardarArff(String direccion) throws IOException {
     	File directory = new File(direccion);
 	 	if (!directory.exists()){
@@ -593,6 +576,11 @@ public class OrganizadorPrediccion {
         writer.flush();
         writer.close();
     }
+    
+    /**
+     * Concatena en el archivo otras instancias
+     * @param direccion path del archivo donde se concatena
+     */
     public void appendArff(String direccion) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(direccion+nombre_arff, true));
 

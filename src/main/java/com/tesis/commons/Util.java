@@ -14,6 +14,12 @@ import java.util.Iterator;
 
 public class Util {
 
+	/**
+     * Convierte el archivo excel pasado por parametro en un json
+     * @param inputFile Ruta de la carpeta a eliminar
+     * @param outputFile Ruta de la carpeta a eliminar
+     * @return String con el contenido del archivo json creado.
+     */
         public static String convertExcelToJson (String inputFile, String outputFile) throws IOException, JSONException, org.apache.poi.openxml4j.exceptions.InvalidFormatException {
             FileInputStream inp = new FileInputStream(inputFile);
             Workbook workbook = WorkbookFactory.create( inp );
@@ -74,16 +80,15 @@ public class Util {
             return str;
         }
         
-        public static void deleteFolder(String path) throws IOException {
+        /**
+         * Elimina la carpeta pasada por parametro
+         * param path ubicacion de la carpeta
+         */
+        public static void deleteFolder(String path) throws IOException, InterruptedException {
         	File fin = new File(path);
         	for (File file : fin.listFiles()) {
         		System.gc();
-                try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				Thread.sleep(2000);
         	    FileDeleteStrategy.FORCE.delete(file);
         	}   
         	FileDeleteStrategy.FORCE.delete(fin);
