@@ -15,6 +15,12 @@ import java.util.List;
 
 public class IpaClasiffier {
 
+	/**
+     * Clasifica directo las conductas IPA con el clasificador pasado por parametro
+     * @param file Archivo a clasificar
+     * @param clas Clasificador
+     * @return String con la clasificación
+     */
     public String parseConductaDirecto (String file, String clas) throws ParseException, FileNotFoundException, JSONException {
 
     	Weka weka = getClassifier(clas);
@@ -24,12 +30,24 @@ public class IpaClasiffier {
     }
 
 
+    /**
+     * Clasifica en fases las conductas IPA con el clasificador pasado por parametro
+     * @param file Archivo a clasificar
+     * @param clas Clasificador
+     * @return String con la clasificación
+     */
     public String parseConductaFases (String file, String clas) throws ParseException, FileNotFoundException, JSONException{
         Weka weka = getClassifier(clas);
         PhasesProcessingSingleClassifier process = new PhasesProcessingSingleClassifier(weka, true, true);
         return process.classify(file, "");
     }
     
+    
+    /**
+     * Retorna el clasificador segun el nombre pasado por parametro
+     * @param clas Clasificador
+     * @return Weka clasificador weka
+     */
     public Weka getClassifier(String clas) {
     	   switch (clas) {
 	           case "J48":
